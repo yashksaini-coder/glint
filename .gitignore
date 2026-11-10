@@ -4,3 +4,6 @@ out/
 .env
 recordings/*.jsonl
 !recordings/guided.jsonl
+
+# DEV post drafts (local only)
+post/
