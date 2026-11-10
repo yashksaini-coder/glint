@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; media-src 'self' blob: mediastream:; worker-src 'self' blob:;">
+  <title>Glint probe</title>
+  <style>
+    body { font: 15px system-ui, sans-serif; background: #101218; color: #e6e6e6; margin: 24px; }
+    video { width: 480px; background: #000; border-radius: 8px; transform: scaleX(-1); }
+    button { font: inherit; padding: 8px 16px; margin-right: 8px; }
+    #hint { color: #ffcc66; min-height: 1.4em; }
+    pre { background: #1a1d26; padding: 12px; border-radius: 8px; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <section id="consent">
+    <h1>Before the camera turns on</h1>
+    <p>Glint reads your face and upper body through this computer's webcam to turn blinks, raised eyebrows and slow breaths into input.</p>
+    <ul>
+      <li>Only you, the person at this screen, are read. The camera starts only after you press Continue and stops when you press Stop or close the app.</li>
+      <li>Video is processed by the SmartSpectra SDK, never written to disk and never sent anywhere by Glint.</li>
+      <li>Recording (off by default) saves numbers only, never images, to the local <code>recordings/</code> folder.</li>
+      <li>SDK telemetry is off.</li>
+      <li>Glint is not a medical device. It makes no health judgements.</li>
+    </ul>
+    <button id="agree">Continue</button>
+  </section>
+  <section id="probe" hidden>
+    <button id="start">Start</button><button id="stop" disabled>Stop</button>
+    <label><input type="checkbox" id="rec"> record metrics to JSONL</label>
+    <p id="hint"></p>
+    <video id="preview" autoplay muted playsinline></video>
+    <pre id="out">idle</pre>
+  </section>
+  <script src="../../dist/renderer.js"></script>
+</body>
+</html>
