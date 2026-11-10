@@ -1,3 +1,4 @@
+import './native-path.ts'; // first: tells the SDK where the packaged native runtime lives
 import { app, BrowserWindow, clipboard, ipcMain, session } from 'electron';
 import { execFile } from 'node:child_process';
 import { appendFileSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
@@ -5,7 +6,12 @@ import path from 'node:path';
 import { bindSmartSpectraIpc } from '@smartspectra/node-sdk/main';
 import { sanitize } from '../shared/settings.ts';
 
-try { process.loadEnvFile(path.join(app.getAppPath(), '.env')); } catch { /* no .env: key check below reports it */ }
+// API key: PRESAGE_API_KEY from the environment, else a .env next to the sources (npm start),
+// else a .env in the user-data folder (installed app). Never bundled into the package.
+for (const dir of [app.getAppPath(), app.getPath('userData')]) {
+  if (process.env.PRESAGE_API_KEY) break;
+  try { process.loadEnvFile(path.join(dir, '.env')); } catch { /* not there */ }
+}
 
 const recordDir = path.join(app.getAppPath(), 'recordings');
 let recordFile: string | null = null;

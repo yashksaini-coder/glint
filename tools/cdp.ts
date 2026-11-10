@@ -7,7 +7,9 @@ import assert from 'node:assert/strict';
 export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 export async function launch(port = 9333) {
-  const proc = spawn('npx', ['electron', '.', `--remote-debugging-port=${port}`], { stdio: 'ignore', detached: true });
+  // GLINT_BIN=out/linux-unpacked/glint runs the same checks against a packaged build.
+  const [cmd, args] = process.env.GLINT_BIN ? [process.env.GLINT_BIN, []] : ['npx', ['electron', '.']];
+  const proc = spawn(cmd, [...args, `--remote-debugging-port=${port}`], { stdio: 'ignore', detached: true });
   let target: { webSocketDebuggerUrl: string } | undefined;
   for (let i = 0; i < 40 && !target; i++) {
     await sleep(500);

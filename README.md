@@ -87,6 +87,15 @@ npm start              # GLINT_DEVTOOLS=1 npm start opens DevTools
 
 The SDK supports Linux x64 (glibc ≥ 2.35), Windows x64 and macOS arm64.
 
+## Download
+
+Builds are on the [Releases](https://github.com/yashksaini-coder/glint/releases) page (made by [CI](.github/workflows/build.yml)): `Glint-<version>-linux-x86_64.AppImage` and `Glint-<version>-win-x64.exe`. They are unsigned, so Windows SmartScreen will ask you to confirm.
+
+- **Linux:** `chmod +x Glint-*.AppImage && ./Glint-*.AppImage`. If it says *AppImages require FUSE* (Arch, Ubuntu 22.04+), run `APPIMAGE_EXTRACT_AND_RUN=1 ./Glint-*.AppImage` or install `libfuse2`.
+- **API key for an installed app:** set `PRESAGE_API_KEY` in your environment, or put `PRESAGE_API_KEY=…` in a `.env` file in the app's user-data folder (`~/.config/glint/` on Linux, `%APPDATA%\glint\` on Windows). The key is never bundled into a build.
+
+Build locally with `npm run dist:linux` (or `dist:win` on Windows). Output goes to `out/`.
+
 ## Develop
 
 ```bash
@@ -107,4 +116,4 @@ tools/           analysis, tuning, smoke test, screenshots
 
 ## Status
 
-Entry for the DEV × Presage SmartSpectra challenge (Nov 2026). Done: consent flow, scanning board, quick phrases, settings, both detectors, replay mode. Next: per-user calibration, packaged builds (AppImage / Windows installer), demo video.
+Entry for the DEV × Presage SmartSpectra challenge (Nov 2026). Done: consent flow, scanning board, quick phrases, settings, both detectors, replay mode, Linux/Windows builds. Next: per-user calibration, demo video.
