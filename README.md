@@ -1,8 +1,19 @@
-<img src="build/icon.svg" width="96" alt="Glint icon: a raised eyebrow over a glint" align="right">
+<p align="center">
+  <img src="build/icon.svg" width="112" alt="Glint icon: a raised eyebrow over a glint">
+</p>
 
-# Glint
+<h1 align="center">Glint</h1>
 
-**Type and speak with your eyebrows and your breath.** A webcam switch-access keyboard for people who can't reliably use their hands or voice, built on the [Presage SmartSpectra](https://smartspectra.presagetech.com/docs/nodejs) Node SDK. No special hardware, no cloud service, no account.
+<p align="center"><b>Type and speak with your eyebrows and your breath.</b></p>
+
+<p align="center">
+  <a href="https://github.com/yashksaini-coder/glint/releases/latest">Download</a> ·
+  <a href="#how-you-use-it">How it works</a> ·
+  <a href="#privacy-and-consent">Privacy</a> ·
+  <a href="#run">Run from source</a>
+</p>
+
+A webcam switch-access keyboard for people who can't reliably use their hands or voice, built on the [Presage SmartSpectra](https://smartspectra.presagetech.com/docs/nodejs) Node SDK. No special hardware, no cloud service, no account.
 
 ![Glint board: "hello" typed, highlight scanning the letters row, live eyebrow and breathing signals below](docs/img/board.png)
 
