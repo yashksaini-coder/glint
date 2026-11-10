@@ -26,10 +26,10 @@ let stream: MediaStream | null = null;
 const AUTO = { advanced: [{ exposureMode: 'continuous' }, { whiteBalanceMode: 'continuous' }, { focusMode: 'continuous' }] } as unknown as MediaTrackConstraints; // Image Capture keys, not in TS DOM lib
 const toAuto = (s: MediaStream) => Promise.all(s.getVideoTracks().map((t) => t.applyConstraints(AUTO).catch(() => {})));
 async function openCamera() {
-  const s = await navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720, frameRate: 30 } });
-  await toAuto(s);
+  stream = await navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720, frameRate: 30 } });
+  await toAuto(stream);
   await new Promise((r) => setTimeout(r, 1500)); // ponytail: fixed settle time; poll brightness if 1.5 s is not enough in dim rooms
-  return s;
+  return stream;
 }
 async function closeCamera() {
   if (!stream) return;
@@ -43,9 +43,28 @@ const seen = (k: string, has: unknown) => {
   if (has && !(k in firstSeen)) { firstSeen[k] = (performance.now() - t0) / 1000; console.log(`[glint] first ${k} at ${firstSeen[k].toFixed(1)} s`); }
 };
 
-$('start').onclick = async () => {
+let busy = false; // a session (or its startup) is in progress; blocks a second camera acquisition
+const setButtons = (running: boolean) => {
+  $<HTMLButtonElement>('start').disabled = running; $<HTMLButtonElement>('guided').disabled = running;
+  $<HTMLButtonElement>('stop').disabled = !running;
+};
+
+async function startSession(record: boolean): Promise<boolean> {
+  if (busy) return false;
+  busy = true; setButtons(true);
+  try {
+    await startSessionInner(record);
+    return true;
+  } catch (e) {
+    $('hint').textContent = `could not start: ${(e as Error).message}`;
+    await stopSession(); // releases camera + closes the recording file
+    return false;
+  }
+}
+
+async function startSessionInner(record: boolean) {
   const apiKey = await window.glint.apiKey();
-  if (!apiKey) { $('hint').textContent = 'PRESAGE_API_KEY is missing from .env'; return; }
+  if (!apiKey) throw new Error('PRESAGE_API_KEY is missing from .env');
   sdk = new SmartSpectraSDK({
     apiKey, enableTelemetry: false,
     // Only what Glint uses: cardioMetrics would also pull the BP-trace and HRV models.
@@ -74,15 +93,15 @@ $('start').onclick = async () => {
       '', 'first seen (s):', ...Object.entries(firstSeen).map(([k, v]) => `  ${k.padEnd(30)} ${v.toFixed(1)}`),
     ].join('\n');
   });
-  const file = await window.glint.record($<HTMLInputElement>('rec').checked);
+  const file = await window.glint.record(record);
   if (file) console.log('[glint] recording to', file);
   stream = await openCamera();
   $<HTMLVideoElement>('preview').srcObject = stream;
   sdk.useMediaStream(stream);
   t0 = performance.now();
   await sdk.start();
-  $<HTMLButtonElement>('start').disabled = true; $<HTMLButtonElement>('stop').disabled = false;
-};
+}
+$('start').onclick = () => startSession($<HTMLInputElement>('rec').checked);
 
 // Guided capture: on-screen cues, each written to the JSONL as {mark, phase, tUs} on the same
 // epoch-µs clock as SDK sample timestamps, so analysis knows exactly when each gesture was asked for.
@@ -99,14 +118,21 @@ const mark = (label: string, phase: 'start' | 'end') => window.glint.frame(JSON.
 const cue = (text: string) => { $('cue').textContent = text; };
 
 $('guided').onclick = async () => {
-  $<HTMLInputElement>('rec').checked = true;
-  $<HTMLButtonElement>('guided').disabled = true;
-  await ($('start').onclick as () => Promise<void>)();
+  if (!(await startSession(true))) return;
+  try {
+    await guidedScript();
+  } finally {
+    await stopSession();
+  }
+};
+
+async function guidedScript() {
   cue('sit still, breathe normally (warming up)');
   const settleStart = performance.now(); // wait for a stable breathing trace, at most 40 s
-  while (!('breathing.upperTrace(stable)' in firstSeen) && performance.now() - settleStart < 40_000) await sleep(0.5);
+  while (sdk && !('breathing.upperTrace(stable)' in firstSeen) && performance.now() - settleStart < 40_000) await sleep(0.5);
   for (const [label, text, secs, reps, rest] of STEPS) {
     for (let i = 1; i <= reps; i++) {
+      if (!sdk) { cue('stopped'); return; } // user pressed Stop
       if (label === 'slow-exhale') { cue('breathe in…'); await sleep(3); }
       cue(reps > 1 ? `${text}  (${i}/${reps})` : text);
       mark(label, 'start'); await sleep(secs); mark(label, 'end');
@@ -114,14 +140,15 @@ $('guided').onclick = async () => {
     }
   }
   cue('done ✓');
-  await ($('stop').onclick as () => Promise<void>)();
-  $<HTMLButtonElement>('guided').disabled = false;
-};
+}
 
-$('stop').onclick = async () => {
-  await sdk?.stop(); sdk?.destroy(); sdk = null;
+async function stopSession() {
+  const s = sdk; sdk = null;
+  try { await s?.stop(); } catch { /* already stopped or errored */ }
+  s?.destroy();
   await closeCamera();
   await window.glint.record(false);
   $<HTMLVideoElement>('preview').srcObject = null;
-  $<HTMLButtonElement>('start').disabled = false; $<HTMLButtonElement>('stop').disabled = true;
-};
+  setButtons(false); busy = false;
+}
+$('stop').onclick = () => stopSession();
