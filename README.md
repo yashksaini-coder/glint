@@ -46,19 +46,7 @@ A highlight steps through the board on its own. You need two gestures:
 
 ## How it works
 
-```mermaid
-flowchart LR
-  cam[Webcam] -->|frames, in memory only| sdk[SmartSpectra SDK<br/>face + breathing models]
-  sdk -->|landmarks| brow[brow ratio<br/>raise detector]
-  sdk -->|breathing.upperTrace| exh[slow-exhale detector]
-  sdk -->|face.talking| exh
-  sdk -->|validationStatus| gate[pause + show SDK hint]
-  sdk -->|cardio.pulseRate| strip[signal strip<br/>pulse: display only]
-  brow -->|select| scan[row/column scanner]
-  exh -->|commit| say[speak + copy]
-  gate --> scan
-  scan --> say
-```
+![How Glint works: webcam frames go to the SmartSpectra SDK on this device; landmarks drive the eyebrow-raise detector (select), validation pauses scanning with the SDK hint, pulse rate is display only, the breathing trace plus talking drive the slow-exhale detector (commit); the scanner and commit lead to speak + copy. Nothing is stored except settings.json, no network except the SDK session, telemetry off by default.](docs/img/architecture.png)
 
 | SDK signal | What Glint does with it |
 |---|---|
