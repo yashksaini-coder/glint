@@ -66,5 +66,6 @@
       "oneClick": false,
       "allowToChangeInstallationDirectory": true
     }
-  }
+  },
+  "license": "MIT"
 }

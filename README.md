@@ -117,3 +117,7 @@ tools/           analysis, tuning, smoke test, screenshots
 ## Status
 
 Entry for the DEV × Presage SmartSpectra challenge (Nov 2026). Done: consent flow, scanning board, quick phrases, settings, both detectors, replay mode, Linux/Windows builds. Next: per-user calibration, demo video.
+
+## License
+
+Glint's own code is [MIT](LICENSE). The Presage SmartSpectra SDK (`@smartspectra/node-sdk` and its platform runtimes) is proprietary and under Presage's own terms; packaged builds include its runtime and its bundled third-party notices (`resources/smartspectra/`).
