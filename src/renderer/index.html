@@ -28,7 +28,9 @@
   </section>
   <section id="probe" hidden>
     <button id="start">Start</button><button id="stop" disabled>Stop</button>
+    <button id="guided">Guided capture (~2.5 min, records)</button>
     <label><input type="checkbox" id="rec"> record metrics to JSONL</label>
+    <p id="cue" style="font-size: 44px; font-weight: 700; color: #7fd1ff; min-height: 1.3em; margin: 12px 0;"></p>
     <p id="hint"></p>
     <video id="preview" autoplay muted playsinline></video>
     <pre id="out">idle</pre>

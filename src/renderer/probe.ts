@@ -84,6 +84,40 @@ $('start').onclick = async () => {
   $<HTMLButtonElement>('start').disabled = true; $<HTMLButtonElement>('stop').disabled = false;
 };
 
+// Guided capture: on-screen cues, each written to the JSONL as {mark, phase, tUs} on the same
+// epoch-µs clock as SDK sample timestamps, so analysis knows exactly when each gesture was asked for.
+const STEPS: [label: string, cue: string, seconds: number, reps: number, restSeconds: number][] = [
+  ['long-blink', 'CLOSE EYES & HOLD', 1, 5, 3],
+  ['quick-blink', 'quick normal blink', 0.5, 5, 2.5],
+  ['brow-raise', 'RAISE EYEBROWS & HOLD', 1.5, 3, 3],
+  ['slow-exhale', 'SLOW BREATH OUT…', 4, 3, 0], // preceded by an inhale cue below
+  ['talking', 'say anything aloud', 10, 1, 2],
+  ['silent', 'sit still, mouth closed', 10, 1, 0],
+];
+const sleep = (s: number) => new Promise((r) => setTimeout(r, s * 1000));
+const mark = (label: string, phase: 'start' | 'end') => window.glint.frame(JSON.stringify({ mark: label, phase, tUs: Date.now() * 1000 }));
+const cue = (text: string) => { $('cue').textContent = text; };
+
+$('guided').onclick = async () => {
+  $<HTMLInputElement>('rec').checked = true;
+  $<HTMLButtonElement>('guided').disabled = true;
+  await ($('start').onclick as () => Promise<void>)();
+  cue('sit still, breathe normally (warming up)');
+  const settleStart = performance.now(); // wait for a stable breathing trace, at most 40 s
+  while (!('breathing.upperTrace(stable)' in firstSeen) && performance.now() - settleStart < 40_000) await sleep(0.5);
+  for (const [label, text, secs, reps, rest] of STEPS) {
+    for (let i = 1; i <= reps; i++) {
+      if (label === 'slow-exhale') { cue('breathe in…'); await sleep(3); }
+      cue(reps > 1 ? `${text}  (${i}/${reps})` : text);
+      mark(label, 'start'); await sleep(secs); mark(label, 'end');
+      cue(''); await sleep(rest || 2);
+    }
+  }
+  cue('done ✓');
+  await ($('stop').onclick as () => Promise<void>)();
+  $<HTMLButtonElement>('guided').disabled = false;
+};
+
 $('stop').onclick = async () => {
   await sdk?.stop(); sdk?.destroy(); sdk = null;
   await closeCamera();

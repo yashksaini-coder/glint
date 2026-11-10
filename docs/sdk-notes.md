@@ -39,3 +39,17 @@ Analysed with throwaway scripts (`analyze.mjs`, `landmarks.mjs`).
 
 1. **Transient 503 `{"detail":"Model not available. Please retry."}`** for `phasic-bp-inference` and `expressions-inference`, 2026-11-10 19:30 IST. The graph went to `kError` about 50 s in. It worked on retry 10 min later.
 2. **Renderer camera lock never released.** `_tryLockCameraParameters` (`js/renderer/index.js:438`) sets exposure, white balance and focus to `manual` and nothing restores `continuous`. On Linux (V4L2) the lock persists on the device, so the next session (any app) starts dark (`kTooDark`; `v4l2-ctl` showed `auto_exposure=1 (Manual Mode)`). Glint works around it by owning the stream (`useMediaStream`), setting `continuous` before start and again before releasing.
+
+## Credit budget (measured 2026-11-10)
+
+Portal: **1 credit = 30 s of live measurement**, free tier 100 credits, renews 2026-12-10 (after the deadline). Day 0 used 13 credits (about 6.5 min across 5 starts). **87 left, about 43 min.**
+
+| Reserve | Credits | Minutes |
+|---|---|---|
+| Guided ground-truth capture (1–2 runs) | 10 | 5 |
+| Live checks of gestures, Days 2–7 | 20 | 10 |
+| Demo video takes | 35 | 17 |
+| Clean-machine / packaged-build test | 8 | 4 |
+| Slack | 14 | 7 |
+
+Everything else runs on replay. Stop live testing if the balance falls below 45 before Day 9.
