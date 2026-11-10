@@ -7,5 +7,10 @@ interface Window {
     copy(text: string): Promise<void>;
     replay(): Promise<string>;
     speak(text: string): Promise<boolean>;
+    settings: {
+      get(): Promise<import('../shared/settings.ts').Settings>;
+      set(s: unknown): Promise<import('../shared/settings.ts').Settings>;
+      forget(): Promise<import('../shared/settings.ts').Settings>;
+    };
   };
 }

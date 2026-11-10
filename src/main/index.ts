@@ -1,8 +1,9 @@
 import { app, BrowserWindow, clipboard, ipcMain, session } from 'electron';
 import { execFile } from 'node:child_process';
-import { appendFileSync, mkdirSync, readFileSync } from 'node:fs';
+import { appendFileSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { bindSmartSpectraIpc } from '@smartspectra/node-sdk/main';
+import { sanitize } from '../shared/settings.ts';
 
 try { process.loadEnvFile(path.join(app.getAppPath(), '.env')); } catch { /* no .env: key check below reports it */ }
 
@@ -16,6 +17,18 @@ ipcMain.handle('glint:record', (_e, on: boolean) => {
   recordFile = path.join(recordDir, `session-${new Date().toISOString().replace(/[:.]/g, '-')}.jsonl`);
   return recordFile;
 });
+// Settings: the only thing Glint persists. Always sanitized at this boundary, in and out.
+const settingsFile = () => path.join(app.getPath('userData'), 'settings.json');
+ipcMain.handle('glint:settings:get', () => {
+  try { return sanitize(JSON.parse(readFileSync(settingsFile(), 'utf8'))); } catch { return sanitize(null); }
+});
+ipcMain.handle('glint:settings:set', (_e, x: unknown) => {
+  const s = sanitize(x);
+  mkdirSync(path.dirname(settingsFile()), { recursive: true });
+  writeFileSync(settingsFile(), JSON.stringify(s, null, 2));
+  return s;
+});
+ipcMain.handle('glint:settings:forget', () => { rmSync(settingsFile(), { force: true }); return sanitize(null); });
 ipcMain.handle('glint:copy', (_e, text: string) => clipboard.writeText(String(text)));
 // Fixed path only: the renderer cannot ask for arbitrary files.
 ipcMain.handle('glint:replay', () => readFileSync(path.join(app.getAppPath(), 'recordings/guided.jsonl'), 'utf8'));

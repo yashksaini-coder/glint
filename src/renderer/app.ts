@@ -8,8 +8,11 @@ import { LETTERS, applyKey } from './board/layouts.ts';
 import { liveSource } from './signals/presage.ts';
 import { replaySource } from './signals/replay.ts';
 import type { SignalSource } from './signals/source.ts';
+import { DEFAULT_SETTINGS, type Settings } from '../shared/settings.ts';
 
-const DWELL_MS = 1000; // ponytail: fixed scan speed; Settings slider on Day 7
+let settings: Settings = DEFAULT_SETTINGS;
+const boardRows = () => (settings.phrases.length ? [settings.phrases, ...LETTERS] : LETTERS);
+const PHRASE_ROW = 0; // only when settings.phrases is non-empty
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
 type Phase = 'consent' | 'setup' | 'board';
@@ -26,14 +29,14 @@ let exhale = exhaleDetector();
 let validationOk = false;
 let okSince = 0;
 let text = '';
-const scanner = createScanner(LETTERS);
+let scanner = createScanner(boardRows());
 const hist = { brow: [] as [number, number][], breath: [] as [number, number][] };
 let browBase: number | null = null;
 let breathStable = false, firstBreathAt = 0, lastTalk = false, pulse: number | null = null;
 
 function resetSession() {
   brow = browDetector(); exhale = exhaleDetector();
-  validationOk = false; okSince = 0; text = ''; scanner.reset();
+  validationOk = false; okSince = 0; text = ''; scanner = createScanner(boardRows());
   hist.brow = []; hist.breath = []; browBase = null;
   breathStable = false; firstBreathAt = 0; lastTalk = false; pulse = null;
 }
@@ -46,7 +49,7 @@ async function start(kind: 'live' | 'replay') {
     if (kind === 'live') {
       const key = await window.glint.apiKey();
       if (!key) throw new Error('No Presage API key: put PRESAGE_API_KEY in .env (see README).');
-      source = liveSource(key);
+      source = liveSource(key, { telemetry: settings.telemetry });
       go('setup');
     } else {
       source = replaySource(await window.glint.replay());
@@ -120,7 +123,7 @@ const schedule = () => {
   scanTimer = setTimeout(() => {
     if (validationOk) scanner.tick(performance.now()); // scanning pauses while the SDK can't see the user
     renderBoard(); schedule();
-  }, DWELL_MS);
+  }, settings.dwellMs);
 };
 
 function enterBoard() {
@@ -129,8 +132,10 @@ function enterBoard() {
 }
 
 function select() {
+  const { mode, row } = scanner.state();
   const key = scanner.select(performance.now());
-  if (key) text = applyKey(text, key);
+  if (key && mode === 'cols' && row === PHRASE_ROW && settings.phrases.length) void say(key); // phrases speak at once
+  else if (key) text = applyKey(text, key);
   renderBoard(); schedule(); // any gesture restarts the dwell timer
 }
 
@@ -138,6 +143,10 @@ async function commit() {
   const t = text.trim();
   if (!t) return; // guard: a stray exhale with nothing composed does nothing
   text = ''; renderBoard();
+  await say(t);
+}
+
+async function say(t: string) {
   await window.glint.copy(t);
   const spoken = await speak(t);
   $('last').textContent = `Last: “${t}”`;
@@ -149,10 +158,23 @@ async function speak(t: string): Promise<boolean> {
   return window.glint.speak(t); // stock Linux has no Web Speech voice; main tries espeak-ng
 }
 
+// Built with DOM nodes + textContent: phrases are user-entered text.
 function buildGrid() {
-  $('grid').innerHTML = LETTERS.map((row, r) =>
-    `<div class="krow" data-r="${r}">${[...row, BACK].map((k, c) =>
-      `<div class="key${k === BACK ? ' back' : ''}" data-c="${c}">${k}</div>`).join('')}</div>`).join('');
+  const grid = $('grid');
+  grid.replaceChildren(...boardRows().map((row, r) => {
+    const el = document.createElement('div');
+    el.className = 'krow' + (r === PHRASE_ROW && settings.phrases.length ? ' phrases' : '');
+    el.dataset.r = String(r);
+    el.style.gridTemplateColumns = `repeat(${row.length + 1}, 1fr)`;
+    el.append(...[...row, BACK].map((k, c) => {
+      const key = document.createElement('div');
+      key.className = 'key' + (k === BACK ? ' back' : '');
+      key.dataset.c = String(c);
+      key.textContent = k;
+      return key;
+    }));
+    return el;
+  }));
 }
 
 function renderBoard() {
@@ -195,6 +217,29 @@ setInterval(() => {
   $('talk').textContent = lastTalk ? 'yes' : 'no';
   $('pulse').textContent = pulse ? `${Math.round(pulse)} bpm` : '–';
 }, 100);
+
+// ---- settings ---------------------------------------------------------------------------------
+function showSettings(s: Settings) {
+  settings = s;
+  $<HTMLInputElement>('dwell').value = String(s.dwellMs);
+  $('dwell-label').textContent = `${(s.dwellMs / 1000).toFixed(1)} s`;
+  $<HTMLTextAreaElement>('phrases').value = s.phrases.join('\n');
+  $<HTMLInputElement>('telemetry').checked = s.telemetry;
+}
+$('dwell').oninput = () => { $('dwell-label').textContent = `${(Number($<HTMLInputElement>('dwell').value) / 1000).toFixed(1)} s`; };
+$('settings-save').onclick = async () => {
+  showSettings(await window.glint.settings.set({
+    dwellMs: Number($<HTMLInputElement>('dwell').value),
+    phrases: $<HTMLTextAreaElement>('phrases').value.split('\n'),
+    telemetry: $<HTMLInputElement>('telemetry').checked,
+  }));
+  $('settings-status').textContent = 'Saved.';
+};
+$('settings-forget').onclick = async () => {
+  showSettings(await window.glint.settings.forget());
+  $('settings-status').textContent = 'Deleted. Back to defaults.';
+};
+window.glint.settings.get().then(showSettings);
 
 // ---- inputs -----------------------------------------------------------------------------------
 $('go-live').onclick = () => start('live');

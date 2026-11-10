@@ -4,6 +4,8 @@ Type, speak, and control a screen with your eyes and your breath. Built on the [
 
 Glint is a switch-access keyboard for people who can't reliably use their hands or voice. A highlight scans the board; **raise your eyebrows** to select, **breathe out slowly** to speak the sentence aloud and copy it. Back/delete are keys on the board (`↩`, `⌫`). A keyboard or physical switch works too: `Space` select, `Enter` speak, `Esc` stop.
 
+The top row holds **quick phrases** ("Yes", "I need water", …): selecting one speaks it straight away. A carer can edit them, the scan speed and SDK telemetry (off by default) under **Settings** on the start screen. Settings are the only thing Glint stores (`settings.json` in the app's user-data folder); **Forget everything** deletes it.
+
 Work in progress (Presage SmartSpectra challenge entry).
 
 ## Run

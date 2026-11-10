@@ -9,4 +9,9 @@ contextBridge.exposeInMainWorld('glint', {
   copy: (text: string): Promise<void> => ipcRenderer.invoke('glint:copy', text),
   replay: (): Promise<string> => ipcRenderer.invoke('glint:replay'),
   speak: (text: string): Promise<boolean> => ipcRenderer.invoke('glint:speak', text),
+  settings: {
+    get: () => ipcRenderer.invoke('glint:settings:get'),
+    set: (s: unknown) => ipcRenderer.invoke('glint:settings:set', s),
+    forget: () => ipcRenderer.invoke('glint:settings:forget'),
+  },
 });
