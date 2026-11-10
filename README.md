@@ -2,7 +2,9 @@
 
 Type, speak, and control a screen with your eyes and your breath. Built on the [Presage SmartSpectra](https://smartspectra.presagetech.com/docs/nodejs) Node SDK.
 
-Work in progress. Right now this is the Day-0 probe: a consent screen, then a live readout of the SDK signals.
+Glint is a switch-access keyboard for people who can't reliably use their hands or voice. A highlight scans the board; **raise your eyebrows** to select, **breathe out slowly** to speak the sentence aloud and copy it. Back/delete are keys on the board (`↩`, `⌫`). A keyboard or physical switch works too: `Space` select, `Enter` speak, `Esc` stop.
+
+Work in progress (Presage SmartSpectra challenge entry).
 
 ## Run
 
@@ -12,6 +14,17 @@ Needs Node ≥ 20 and a free API key from [physiology.presagetech.com](https://p
 npm install
 cp .env.example .env   # put your key in PRESAGE_API_KEY
 npm start              # GLINT_DEVTOOLS=1 npm start shows the console
+```
+
+No key or camera? Choose **Try a recorded session** on the first screen: it replays a recorded session (numbers only, no video) through the same gesture detectors.
+
+Linux speech: Chromium has no built-in voice on most distros, so Glint falls back to `espeak-ng` (`sudo pacman -S espeak-ng` / `sudo apt install espeak-ng`). Without it, text is still copied.
+
+## Develop
+
+```bash
+npm test         # gesture detectors (on recordings/guided.jsonl) + scanner
+npm run smoke    # launches the app, replays, types and speaks via simulated switch presses
 ```
 
 Linux x64 (glibc ≥ 2.35), Windows x64 and macOS arm64 are supported by the SDK.

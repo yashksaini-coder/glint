@@ -4,7 +4,8 @@
 export type Sample =
   | { k: 'brow'; t: number; v: number }   // brow-to-eye distance / inter-ocular distance (landmarks)
   | { k: 'breath'; t: number; v: number; s: boolean } // breathing.upperTrace: rises on inhale, falls on exhale; s = stable
-  | { k: 'talk'; t: number; v: boolean }; // face.talking.detected
+  | { k: 'talk'; t: number; v: boolean } // face.talking.detected
+  | { k: 'pulse'; t: number; v: number; c: number }; // cardio.pulseRate, shown to the user only, never used for decisions
 
 type Pt = { x: number; y: number };
 const dist = (a: Pt, b: Pt) => Math.hypot(a.x - b.x, a.y - b.y);
@@ -26,5 +27,6 @@ export function extract(m: any): Sample[] {
   }
   for (const x of m.breathing?.upperTrace ?? []) out.push({ k: 'breath', t: x.timestamp, v: x.value ?? 0, s: !!x.stable });
   for (const x of m.face?.talking ?? []) out.push({ k: 'talk', t: x.timestamp, v: !!x.detected });
+  for (const x of m.cardio?.pulseRate ?? []) out.push({ k: 'pulse', t: x.timestamp, v: x.value ?? 0, c: x.confidence ?? 0 });
   return out;
 }

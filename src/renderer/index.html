@@ -3,38 +3,111 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; media-src 'self' blob: mediastream:; worker-src 'self' blob:;">
-  <title>Glint probe</title>
+  <title>Glint</title>
   <style>
-    body { font: 15px system-ui, sans-serif; background: #101218; color: #e6e6e6; margin: 24px; }
-    video { width: 480px; background: #000; border-radius: 8px; transform: scaleX(-1); }
-    button { font: inherit; padding: 8px 16px; margin-right: 8px; }
-    #hint { color: #ffcc66; min-height: 1.4em; }
-    pre { background: #1a1d26; padding: 12px; border-radius: 8px; }
+    :root {
+      --bg: #0f1117; --panel: #181b24; --line: #2a2f3d; --text: #e9ebf0; --muted: #9aa1b2;
+      --accent: #7fd1ff; --hot: #ffd166; --ok: #6ee7a8; --warn: #ffb4a2;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 17px/1.45 system-ui, sans-serif; background: var(--bg); color: var(--text); }
     [hidden] { display: none !important; }
+    main { max-width: 1100px; margin: 0 auto; padding: 24px; }
+    button { font: inherit; padding: 10px 18px; border-radius: 10px; border: 1px solid var(--line); background: var(--panel); color: var(--text); cursor: pointer; }
+    button.primary { background: var(--accent); color: #062033; border-color: var(--accent); font-weight: 600; }
+    button:focus-visible { outline: 3px solid var(--hot); outline-offset: 2px; }
+    .muted { color: var(--muted); }
+    .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+
+    /* consent */
+    #consent { max-width: 720px; }
+    #consent h1 { font-size: 30px; margin: 8px 0 4px; }
+    #consent ul { padding-left: 20px; }
+    #consent li { margin: 6px 0; }
+
+    /* setup */
+    #setup video, #board video { background: #000; border-radius: 10px; transform: scaleX(-1); }
+    #setup video { width: 100%; max-width: 560px; }
+    .hint { color: var(--hot); min-height: 1.5em; font-weight: 600; }
+    .check { list-style: none; padding: 0; }
+    .check li::before { content: '○  '; color: var(--muted); }
+    .check li.done::before { content: '●  '; color: var(--ok); }
+
+    /* board */
+    #output { font-size: 34px; min-height: 1.6em; padding: 10px 16px; background: var(--panel); border-radius: 12px; border: 1px solid var(--line); letter-spacing: .5px; }
+    #output::after { content: '▏'; color: var(--accent); }
+    #grid { display: grid; gap: 8px; margin: 16px 0; }
+    .krow { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; padding: 6px; border-radius: 14px; border: 2px solid transparent; }
+    .krow.on { border-color: var(--accent); background: #7fd1ff14; }
+    .key { font-size: 30px; font-weight: 600; text-align: center; padding: 14px 0; border-radius: 10px; background: var(--panel); border: 1px solid var(--line); }
+    .key.back { font-size: 24px; color: var(--muted); }
+    .key.on { background: var(--hot); color: #2a1d00; border-color: var(--hot); }
+    #paused { position: fixed; inset: auto 0 0 0; padding: 14px; text-align: center; background: #3a1d17; color: var(--warn); font-weight: 600; }
+    #toast { position: fixed; top: 18px; left: 50%; transform: translateX(-50%); background: var(--ok); color: #05301b; padding: 10px 18px; border-radius: 10px; font-weight: 600; }
+
+    /* signal strip: makes the SDK signals visible to the user (and to judges) */
+    #strip { display: grid; grid-template-columns: 1fr 1fr auto; gap: 12px; align-items: stretch; }
+    .sig { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 8px 12px; }
+    .sig b { font-size: 13px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .6px; }
+    .sig canvas { width: 100%; height: 56px; display: block; }
+    .badge { font-size: 12px; padding: 1px 8px; border-radius: 99px; background: #ffd16622; color: var(--hot); }
+    #side { display: grid; gap: 6px; font-size: 15px; min-width: 190px; }
+    #side video { width: 190px; }
   </style>
 </head>
 <body>
+<main>
   <section id="consent">
+    <p class="muted">Glint · hands-free typing and speech</p>
     <h1>Before the camera turns on</h1>
-    <p>Glint reads your face and upper body through this computer's webcam to turn blinks, raised eyebrows and slow breaths into input.</p>
+    <p>Glint turns <strong>raised eyebrows</strong> into "select" and a <strong>slow breath out</strong> into "speak", read through this computer's webcam by the Presage SmartSpectra SDK.</p>
     <ul>
-      <li>Only you, the person at this screen, are read. The camera starts only after you press Continue and stops when you press Stop or close the app.</li>
-      <li>Video is processed by the SmartSpectra SDK, never written to disk and never sent anywhere by Glint.</li>
-      <li>Recording (off by default) saves numbers only, never images, to the local <code>recordings/</code> folder.</li>
-      <li>SDK telemetry is off.</li>
-      <li>Glint is not a medical device. It makes no health judgements.</li>
+      <li>Only the person in front of this screen is read. If more than one face is visible, Glint pauses.</li>
+      <li>The camera starts only when you press <em>Start camera</em> and stops when you press <em>Stop</em> or close the app.</li>
+      <li>Video is processed on this device by the SDK. Glint never saves it or sends it anywhere.</li>
+      <li>Nothing you type or say is stored. Spoken text is copied to the clipboard; that is the only place it goes.</li>
+      <li>SDK telemetry is <strong>off</strong>. Glint uses no AI service, no analytics and no account.</li>
+      <li>Pulse is displayed only, so you can see you are being read. Glint is not a medical device and makes no health judgements.</li>
     </ul>
-    <button id="agree">Continue</button>
+    <div class="row">
+      <button id="go-live" class="primary">I agree — Start camera</button>
+      <button id="go-replay">Try a recorded session (no camera)</button>
+    </div>
+    <p class="hint" id="consent-error"></p>
   </section>
-  <section id="probe" hidden>
-    <button id="start">Start</button><button id="stop" disabled>Stop</button>
-    <button id="guided">Guided capture (~2.5 min, records)</button>
-    <label><input type="checkbox" id="rec"> record metrics to JSONL</label>
-    <p id="cue" style="font-size: 44px; font-weight: 700; color: #7fd1ff; min-height: 1.3em; margin: 12px 0;"></p>
-    <p id="hint"></p>
-    <video id="preview" autoplay muted playsinline></video>
-    <pre id="out">idle</pre>
+
+  <section id="setup" hidden>
+    <h2>Getting ready</h2>
+    <p class="hint" id="setup-hint">Starting camera…</p>
+    <video id="setup-video" autoplay muted playsinline></video>
+    <ul class="check">
+      <li id="chk-face">Face in view and well lit</li>
+      <li id="chk-brow">Eyebrows tracked</li>
+      <li id="chk-breath">Breathing signal (exhale to speak works now; steadier after ~30 s)</li>
+    </ul>
+    <button id="setup-stop">Stop</button>
   </section>
-  <script src="../../dist/renderer.js"></script>
+
+  <section id="board" hidden>
+    <div id="output" aria-live="polite"></div>
+    <p class="muted" id="last"></p>
+    <div id="grid"></div>
+    <div id="strip">
+      <div class="sig"><b>Eyebrows</b> <span class="muted">· raise to select</span><canvas id="c-brow"></canvas></div>
+      <div class="sig"><b>Breathing</b> <span class="muted">· slow breath out to speak</span> <span class="badge" id="breath-badge">warming up</span><canvas id="c-breath"></canvas></div>
+      <div id="side">
+        <video id="board-video" autoplay muted playsinline></video>
+        <span id="src-label" class="muted"></span>
+        <span>talking: <strong id="talk">–</strong></span>
+        <span>pulse (display only): <strong id="pulse">–</strong></span>
+        <button id="board-stop">Stop</button>
+      </div>
+    </div>
+    <p class="muted">Keyboard / switch: <kbd>Space</kbd> select · <kbd>Enter</kbd> speak · <kbd>Esc</kbd> stop</p>
+  </section>
+</main>
+<div id="paused" hidden></div>
+<div id="toast" hidden></div>
+<script src="../../dist/renderer.js"></script>
 </body>
 </html>

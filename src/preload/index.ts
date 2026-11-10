@@ -6,4 +6,7 @@ contextBridge.exposeInMainWorld('glint', {
   apiKey: (): Promise<string> => ipcRenderer.invoke('glint:apiKey'),
   record: (on: boolean): Promise<string | null> => ipcRenderer.invoke('glint:record', on),
   frame: (line: string) => ipcRenderer.send('glint:frame', line),
+  copy: (text: string): Promise<void> => ipcRenderer.invoke('glint:copy', text),
+  replay: (): Promise<string> => ipcRenderer.invoke('glint:replay'),
+  speak: (text: string): Promise<boolean> => ipcRenderer.invoke('glint:speak', text),
 });

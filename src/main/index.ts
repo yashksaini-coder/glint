@@ -1,5 +1,6 @@
-import { app, BrowserWindow, ipcMain, session } from 'electron';
-import { appendFileSync, mkdirSync } from 'node:fs';
+import { app, BrowserWindow, clipboard, ipcMain, session } from 'electron';
+import { execFile } from 'node:child_process';
+import { appendFileSync, mkdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { bindSmartSpectraIpc } from '@smartspectra/node-sdk/main';
 
@@ -15,6 +16,12 @@ ipcMain.handle('glint:record', (_e, on: boolean) => {
   recordFile = path.join(recordDir, `session-${new Date().toISOString().replace(/[:.]/g, '-')}.jsonl`);
   return recordFile;
 });
+ipcMain.handle('glint:copy', (_e, text: string) => clipboard.writeText(String(text)));
+// Fixed path only: the renderer cannot ask for arbitrary files.
+ipcMain.handle('glint:replay', () => readFileSync(path.join(app.getAppPath(), 'recordings/guided.jsonl'), 'utf8'));
+// Fallback when the OS exposes no Web Speech voice (stock Linux): espeak-ng if installed. Args array, no shell.
+ipcMain.handle('glint:speak', (_e, text: string) => new Promise<boolean>((resolve) =>
+  execFile('espeak-ng', ['--', String(text).slice(0, 500)], (err) => resolve(!err))));
 ipcMain.on('glint:frame', (_e, line: string) => { if (recordFile) appendFileSync(recordFile, line + '\n'); });
 
 app.whenReady().then(() => {
