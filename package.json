@@ -10,7 +10,8 @@
     "typecheck": "tsc",
     "smoke": "npm run build && node tools/smoke.ts /tmp/glint-smoke.png",
     "dist:linux": "npm run build && electron-builder --linux AppImage --x64 --publish never",
-    "dist:win": "npm run build && electron-builder --win nsis --x64 --publish never"
+    "dist:win": "npm run build && electron-builder --win nsis --x64 --publish never",
+    "diagram": "node tools/diagram/make.mjs && electron tools/diagram/render.cjs out/diagram/wrap.html docs/img/architecture.png 1480 720"
   },
   "keywords": [],
   "author": "Yash Saini",
@@ -23,6 +24,7 @@
     "electron": "^45.2.3",
     "electron-builder": "^26.18.0",
     "esbuild": "^0.28.2",
+    "roughjs": "^4.6.6",
     "typescript": "^7.0.2"
   },
   "productName": "Glint",

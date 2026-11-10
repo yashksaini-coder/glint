@@ -102,7 +102,8 @@ Build locally with `npm run dist:linux` (or `dist:win` on Windows). Output goes 
 ```bash
 npm test                     # detectors on the recorded fixture, scanner, settings validation
 npm run smoke                # launches the app, replays, types + speaks via simulated switch presses
-node tools/screenshots.ts    # regenerates docs/img/*.png (replay mode: no camera, no face)
+node tools/screenshots.ts    # regenerates the app screenshots in docs/img/ (replay mode: no camera, no face)
+npm run diagram              # regenerates docs/img/architecture.png from tools/diagram/make.mjs
 node tools/sweep.ts          # grid-searches detector thresholds against the recorded cues
 ```
 
