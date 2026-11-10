@@ -1,3 +1,5 @@
+<img src="build/icon.svg" width="96" alt="Glint icon: a raised eyebrow over a glint" align="right">
+
 # Glint
 
 **Type and speak with your eyebrows and your breath.** A webcam switch-access keyboard for people who can't reliably use their hands or voice, built on the [Presage SmartSpectra](https://smartspectra.presagetech.com/docs/nodejs) Node SDK. No special hardware, no cloud service, no account.

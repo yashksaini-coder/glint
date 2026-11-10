@@ -52,7 +52,8 @@ app.whenReady().then(() => {
   });
 
   const win = new BrowserWindow({
-    width: 1100, height: 760, backgroundColor: '#101218',
+    width: 1100, height: 760, backgroundColor: '#101218', title: 'Glint',
+    icon: path.join(app.getAppPath(), 'build/icon.png'), // Linux taskbar; installers use build/ via electron-builder
     webPreferences: { preload: path.join(app.getAppPath(), 'dist/preload.cjs'), contextIsolation: true, sandbox: true },
   });
   bindSmartSpectraIpc(win);

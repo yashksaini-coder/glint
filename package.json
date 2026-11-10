@@ -35,6 +35,7 @@
     },
     "files": [
       "dist/**",
+      "build/icon.png",
       "src/renderer/index.html",
       "recordings/guided.jsonl",
       "package.json",

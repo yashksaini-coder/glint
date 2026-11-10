@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <!-- Glint: a raised eyebrow (select) over a glint (the scanning highlight). Colors match the app. -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1a1f2e"/>
+      <stop offset="1" stop-color="#0b0d13"/>
+    </linearGradient>
+  </defs>
+  <rect x="16" y="16" width="480" height="480" rx="112" fill="url(#bg)"/>
+  <path d="M128 214 Q256 96 384 214" fill="none" stroke="#7fd1ff" stroke-width="40" stroke-linecap="round"/>
+  <path d="M256 236 C263 300 276 313 340 320 C276 327 263 340 256 404 C249 340 236 327 172 320 C236 313 249 300 256 236 Z" fill="#ffd166"/>
+</svg>
