@@ -9,8 +9,8 @@
     "build": "esbuild src/main/index.ts --bundle --platform=node --format=cjs --external:electron --external:@smartspectra/node-sdk --outfile=dist/main.cjs --log-level=warning && esbuild src/preload/index.ts --bundle --platform=node --format=cjs --external:electron --outfile=dist/preload.cjs --log-level=warning && esbuild src/renderer/app.ts --bundle --platform=browser --format=iife --outfile=dist/renderer.js --log-level=warning",
     "typecheck": "tsc",
     "smoke": "npm run build && node tools/smoke.ts /tmp/glint-smoke.png",
-    "dist:linux": "npm run build && electron-builder --linux AppImage --x64",
-    "dist:win": "npm run build && electron-builder --win nsis --x64"
+    "dist:linux": "npm run build && electron-builder --linux AppImage --x64 --publish never",
+    "dist:win": "npm run build && electron-builder --win nsis --x64 --publish never"
   },
   "keywords": [],
   "author": "Yash Saini",
@@ -66,7 +66,8 @@
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true
-    }
+    },
+    "publish": null
   },
   "license": "MIT"
 }
