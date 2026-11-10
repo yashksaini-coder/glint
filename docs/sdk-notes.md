@@ -53,3 +53,18 @@ Portal: **1 credit = 30 s of live measurement**, free tier 100 credits, renews 2
 | Slack | 14 | 7 |
 
 Everything else runs on replay. Stop live testing if the balance falls below 45 before Day 9.
+
+## Guided capture, 2026-11-10 20:15 IST (`session-2026-11-10T14-45-31-468Z.jsonl`, about 5 credits)
+
+Run with `node tools/guided.mjs <file>` and `node tools/blinkcheck.mjs <file>`. Cue clock and sample clock agree: brow windows line up to within one frame.
+
+| Gesture (cued) | SDK signal | Landmarks | Verdict |
+|---|---|---|---|
+| Long eye closure, 1 s ×5 | `blinking.detected` 0 frames (1 of 4096 frames all session) | EAR never below 75% of baseline (min 0.229 vs 0.304; lid gap ≥ 10 px). Face mesh did not register a closed eye | **Not detectable in this run**; pending: were eyes fully closed? lighting? |
+| Quick blink ×5 | 0 | no dip | same |
+| Brow raise 1.5 s ×3 | surprise peak 76–84, ≥ 30 for only 36–264 ms | brow/IOD +40% every time, held 500–830 ms | **Landmark brow ratio works**; surprise is a weak confirm |
+| Slow exhale 4 s ×3 | upperTrace (EMA 0.15): inhale +2.4…+7.9, exhale −6.0…−14.6 | — | **Trace rises on inhale, falls on exhale**, consistent 3/3, even before `stable` |
+| Talking 10 s | `talking` 81% of frames | — | usable with a 1 s majority window |
+| Silent 10 s | `talking` 20% of frames (30% in one exhale window) | — | raw per-frame `talking` too noisy for hard suppression |
+
+Un-cued false positives (about 36 s): brow +20% held ≥ 300 ms ×3, so the threshold must sit nearer +30%.
