@@ -68,3 +68,19 @@ Run with `node tools/guided.mjs <file>` and `node tools/blinkcheck.mjs <file>`. 
 | Silent 10 s | `talking` 20% of frames (30% in one exhale window) | — | raw per-frame `talking` too noisy for hard suppression |
 
 Un-cued false positives (about 36 s): brow +20% held ≥ 300 ms ×3, so the threshold must sit nearer +30%.
+
+## Camera check, 2026-11-10 20:27 IST (ffmpeg, no SDK session, frame deleted after)
+
+- The camera already runs at its best mode: **1280×720 MJPG at 30 fps**. YUYV tops out at 640×480, and we request 1280×720.
+- No filter: contrast, saturation, gamma and sharpness are at their defaults, auto white balance is on and auto exposure is on. Low average saturation (5.4) comes from the grey wall and grey shirt; colours elsewhere are normal.
+- **The light is the limit:** mean luma 53.7 on a 16–235 scale, with the face in shadow from an overhead or behind light source, at the auto-exposure ceiling (1/30 s, gain 0).
+- **Thick-framed glasses** sit over the upper eyelid line. Together with the shadow, this is the likely reason the face mesh never registered a closed eye. The brow ratio still works because landmarks 105/334 sit above the frame.
+
+## Gesture decision (user, 2026-11-10)
+
+Eye closure was not detectable on the guided recording, so the gesture set is now: **brow raise = select**, **slow exhale = commit (speak + copy)**, **back = a ⌫ / ↩ item on the scanned board**.
+
+Detectors (`src/renderer/gestures/`), tuned on `recordings/guided.jsonl` with `tools/sweep.ts` and checked with `npm test`:
+
+- **brow:** smoothed brow/IOD ratio, rise 28%, re-arm below 10%, hold 200 ms. **2/3 cued raises, 0 false selects.** The third was missed because the brow stayed at +14–26% after raise 2, so the detector never re-armed. Relaxing between selects is required by design.
+- **exhale:** EMA trace fall ≥ 6 units over ≥ 2.5 s at ≤ 5 units/s, and not talking (> 50% of the last 1 s). **3/3 cued exhales, 0 during speech**, plus 2 un-cued fires that look like genuine resting slow exhales (35.9 s, 132.5 s). The product guard is that commit does nothing while the text buffer is empty.

@@ -3,4 +3,4 @@ dist/
 out/
 .env
 recordings/*.jsonl
-!recordings/sample.jsonl
+!recordings/guided.jsonl

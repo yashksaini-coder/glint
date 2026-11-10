@@ -27,7 +27,7 @@ app.whenReady().then(() => {
 
   const win = new BrowserWindow({
     width: 1100, height: 760, backgroundColor: '#101218',
-    webPreferences: { preload: path.join(app.getAppPath(), 'dist/preload.js'), contextIsolation: true, sandbox: true },
+    webPreferences: { preload: path.join(app.getAppPath(), 'dist/preload.cjs'), contextIsolation: true, sandbox: true },
   });
   bindSmartSpectraIpc(win);
   win.webContents.on('console-message', (e) => { if (e.message.startsWith('[glint]')) console.log(e.message); });
