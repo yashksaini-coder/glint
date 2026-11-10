@@ -30,6 +30,7 @@ app.whenReady().then(() => {
     webPreferences: { preload: path.join(app.getAppPath(), 'dist/preload.js'), contextIsolation: true, sandbox: true },
   });
   bindSmartSpectraIpc(win);
+  win.webContents.on('console-message', (e) => { if (e.message.startsWith('[glint]')) console.log(e.message); });
   win.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
   win.webContents.on('will-navigate', (e) => e.preventDefault());
   win.loadFile(path.join(app.getAppPath(), 'src/renderer/index.html'));

@@ -1,7 +1,7 @@
 // Day-0 probe: consent gate -> live SDK session -> show each signal, log when it first arrives,
 // optionally record decoded metrics (numbers only) to JSONL for replay.
 import {
-  SmartSpectraSDK, ValidationCode, ProcessingStatus, breathingMetrics, cardioMetrics, faceMetrics,
+  SmartSpectraSDK, ValidationCode, ProcessingStatus, MetricType, breathingMetrics, faceMetrics,
 } from '@smartspectra/node-sdk/renderer';
 import { decodeMetrics, Metrics } from '@smartspectra/node-sdk/messages';
 
@@ -18,6 +18,25 @@ const SURPRISE = 8; // ExpressionType.SURPRISE; confidence is 0..100, not 0..1
 $('agree').onclick = () => { $('consent').hidden = true; $('probe').hidden = false; };
 
 let sdk: SmartSpectraSDK | null = null;
+let stream: MediaStream | null = null;
+
+// The SDK locks exposure/white balance/focus to 'manual' once Running and never unlocks them. On Linux
+// (V4L2) that lock outlives the process, so the next session starts dark. We own the stream so we can
+// start every session from auto and hand the camera back in auto.
+const AUTO = { advanced: [{ exposureMode: 'continuous' }, { whiteBalanceMode: 'continuous' }, { focusMode: 'continuous' }] } as unknown as MediaTrackConstraints; // Image Capture keys, not in TS DOM lib
+const toAuto = (s: MediaStream) => Promise.all(s.getVideoTracks().map((t) => t.applyConstraints(AUTO).catch(() => {})));
+async function openCamera() {
+  const s = await navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720, frameRate: 30 } });
+  await toAuto(s);
+  await new Promise((r) => setTimeout(r, 1500)); // ponytail: fixed settle time; poll brightness if 1.5 s is not enough in dim rooms
+  return s;
+}
+async function closeCamera() {
+  if (!stream) return;
+  await toAuto(stream);
+  stream.getTracks().forEach((t) => t.stop());
+  stream = null;
+}
 let t0 = 0;
 const firstSeen: Record<string, number> = {};
 const seen = (k: string, has: unknown) => {
@@ -29,14 +48,14 @@ $('start').onclick = async () => {
   if (!apiKey) { $('hint').textContent = 'PRESAGE_API_KEY is missing from .env'; return; }
   sdk = new SmartSpectraSDK({
     apiKey, enableTelemetry: false,
-    requestedMetrics: [...breathingMetrics, ...cardioMetrics, ...faceMetrics],
+    // Only what Glint uses: cardioMetrics would also pull the BP-trace and HRV models.
+    requestedMetrics: [...breathingMetrics, MetricType.PULSE_RATE, ...faceMetrics],
   });
-  sdk.on('streamAvailable', (s) => { $<HTMLVideoElement>('preview').srcObject = s; });
   sdk.on('processingStatus', (s) => console.log('[glint] status', nameOf(ProcessingStatus, s)));
   sdk.on('validationStatus', (code, _ts, hint) => {
     $('hint').textContent = code === ValidationCode.kOk ? '' : `${nameOf(ValidationCode, code)}: ${hint}`;
   });
-  sdk.on('error', (code, msg, retryable) => { $('hint').textContent = `error ${code}: ${msg} (retryable=${retryable})`; });
+  sdk.on('error', (code, msg, retryable) => { console.log(`[glint] error ${code}: ${msg} retryable=${retryable}`); $('hint').textContent = `error ${code}: ${msg} (retryable=${retryable})`; });
   sdk.on('metrics', (buf, ts) => {
     const m = Metrics.toObject(decodeMetrics(buf), { longs: Number, defaults: false }) as any;
     window.glint.frame(JSON.stringify({ ts, m }));
@@ -57,6 +76,9 @@ $('start').onclick = async () => {
   });
   const file = await window.glint.record($<HTMLInputElement>('rec').checked);
   if (file) console.log('[glint] recording to', file);
+  stream = await openCamera();
+  $<HTMLVideoElement>('preview').srcObject = stream;
+  sdk.useMediaStream(stream);
   t0 = performance.now();
   await sdk.start();
   $<HTMLButtonElement>('start').disabled = true; $<HTMLButtonElement>('stop').disabled = false;
@@ -64,6 +86,7 @@ $('start').onclick = async () => {
 
 $('stop').onclick = async () => {
   await sdk?.stop(); sdk?.destroy(); sdk = null;
+  await closeCamera();
   await window.glint.record(false);
   $<HTMLVideoElement>('preview').srcObject = null;
   $<HTMLButtonElement>('start').disabled = false; $<HTMLButtonElement>('stop').disabled = true;
