@@ -1,12 +1,73 @@
 # Glint
 
-Type, speak, and control a screen with your eyes and your breath. Built on the [Presage SmartSpectra](https://smartspectra.presagetech.com/docs/nodejs) Node SDK.
+**Type and speak with your eyebrows and your breath.** A webcam switch-access keyboard for people who can't reliably use their hands or voice, built on the [Presage SmartSpectra](https://smartspectra.presagetech.com/docs/nodejs) Node SDK. No special hardware, no cloud service, no account.
 
-Glint is a switch-access keyboard for people who can't reliably use their hands or voice. A highlight scans the board; **raise your eyebrows** to select, **breathe out slowly** to speak the sentence aloud and copy it. Back/delete are keys on the board (`↩`, `⌫`). A keyboard or physical switch works too: `Space` select, `Enter` speak, `Esc` stop.
+![Glint board: "hello" typed, highlight scanning the letters row, live eyebrow and breathing signals below](docs/img/board.png)
 
-The top row holds **quick phrases** ("Yes", "I need water", …): selecting one speaks it straight away. A carer can edit them, the scan speed and SDK telemetry (off by default) under **Settings** on the start screen. Settings are the only thing Glint stores (`settings.json` in the app's user-data folder); **Forget everything** deletes it.
+## How you use it
 
-Work in progress (Presage SmartSpectra challenge entry).
+A highlight steps through the board on its own. You need two gestures:
+
+| Gesture | Does | Read from |
+|---|---|---|
+| **Raise your eyebrows** | Select the highlighted row, then the highlighted key | face landmarks (brow-to-eye distance) |
+| **Breathe out slowly** (about 3 s) | Speak the sentence aloud and copy it to the clipboard | chest breathing trace |
+
+- **Back and delete are keys:** `↩` ends every row and `⌫` is on the first letter row.
+- **Letters are in frequency order** (space, E, T, A, O first), so the common ones take the fewest steps.
+- **Quick phrases** on the top row ("Yes", "I need water", "I need help" …) are spoken as soon as you select them.
+- **A keyboard or physical switch works too:** `Space` select · `Enter` speak · `Esc` stop.
+
+## Screens
+
+<table>
+<tr>
+<td width="50%"><img src="docs/img/consent.png" alt="Consent screen: what is read, what is stored, telemetry off; Start camera or Try a recorded session"></td>
+<td width="50%"><img src="docs/img/settings.png" alt="Settings: scan speed, quick phrases, SDK telemetry checkbox (off), Save and Forget everything"></td>
+</tr>
+<tr>
+<td><b>Consent first.</b> The camera can only be started from here, after the user has read what is read and what is kept.</td>
+<td><b>Settings</b>, for the user or a carer: scan speed, the six quick phrases, SDK telemetry (off by default), and <i>Forget everything</i>.</td>
+</tr>
+</table>
+
+## How it works
+
+```mermaid
+flowchart LR
+  cam[Webcam] -->|frames, in memory only| sdk[SmartSpectra SDK<br/>face + breathing models]
+  sdk -->|landmarks| brow[brow ratio<br/>raise detector]
+  sdk -->|breathing.upperTrace| exh[slow-exhale detector]
+  sdk -->|face.talking| exh
+  sdk -->|validationStatus| gate[pause + show SDK hint]
+  sdk -->|cardio.pulseRate| strip[signal strip<br/>pulse: display only]
+  brow -->|select| scan[row/column scanner]
+  exh -->|commit| say[speak + copy]
+  gate --> scan
+  scan --> say
+```
+
+| SDK signal | What Glint does with it |
+|---|---|
+| `face.landmarks` (478 points) | Brow-to-eye distance ÷ eye spacing → **select** when it rises about 28% and holds |
+| `breathing.upperTrace` | Rises on inhale, falls on exhale. A gentle fall of ≥ 6 units for ≥ 2.5 s → **speak** |
+| `face.talking` | Blocks speaking while you are talking |
+| `validationStatus` + hint | Scanning pauses and shows the SDK's own hint ("Increase light on face", or a hint when more than one face is visible …) |
+| `cardio.pulseRate` | Shown in the strip so you can see you're being read. Never used for any decision |
+
+The detectors are small pure functions (`src/renderer/gestures/`), tuned and tested on a real recorded session with timestamped gesture cues ([`recordings/guided.jsonl`](recordings/guided.jsonl): numbers only, no video). Everything the SDK measured is in [`docs/sdk-notes.md`](docs/sdk-notes.md).
+
+**Why eyebrows and not blinks?** The plan was a long blink to select. On the recorded session, five deliberate 1-second eye closures were invisible to both the SDK's blink signal and the face landmarks: the user wears thick-framed glasses and sat in dim light. Eyebrow raises showed up every time (+40%). So the gesture set follows the measurements.
+
+## Privacy and consent
+
+- The camera starts only from the consent screen and is released on Stop, Esc, error, or closing the app.
+- Video is processed on the device by the SDK. Glint never writes it to disk or sends it anywhere.
+- Nothing you type or say is stored. Spoken text goes to the clipboard and nowhere else.
+- The only stored file is `settings.json` in the app's user-data folder. **Forget everything** deletes it.
+- SDK telemetry (session summaries and readiness reports; no frames, no vitals) is **off** unless you turn it on. See [Presage telemetry & privacy](https://smartspectra.presagetech.com/docs/telemetry-and-privacy).
+- No LLM Insights, no AI service, no analytics, no accounts.
+- **Glint is not a medical device** and makes no health judgements.
 
 ## Run
 
@@ -15,18 +76,35 @@ Needs Node ≥ 20 and a free API key from [physiology.presagetech.com](https://p
 ```bash
 npm install
 cp .env.example .env   # put your key in PRESAGE_API_KEY
-npm start              # GLINT_DEVTOOLS=1 npm start shows the console
+npm start              # GLINT_DEVTOOLS=1 npm start opens DevTools
 ```
 
-No key or camera? Choose **Try a recorded session** on the first screen: it replays a recorded session (numbers only, no video) through the same gesture detectors.
+**No key or no camera?** Choose **Try a recorded session** on the first screen. It replays a recorded session through the same detectors, and you can type with `Space` / `Enter`.
 
-Linux speech: Chromium has no built-in voice on most distros, so Glint falls back to `espeak-ng` (`sudo pacman -S espeak-ng` / `sudo apt install espeak-ng`). Without it, text is still copied.
+**Linux speech:** most distros give Chromium no built-in voice, so Glint falls back to `espeak-ng` (`sudo pacman -S espeak-ng` / `sudo apt install espeak-ng`). Without it, text is still copied.
+
+**Light matters.** Sit facing a lamp or window. A face in shadow is the most common reason tracking fails.
+
+The SDK supports Linux x64 (glibc ≥ 2.35), Windows x64 and macOS arm64.
 
 ## Develop
 
 ```bash
-npm test         # gesture detectors (on recordings/guided.jsonl) + scanner
-npm run smoke    # launches the app, replays, types and speaks via simulated switch presses
+npm test                     # detectors on the recorded fixture, scanner, settings validation
+npm run smoke                # launches the app, replays, types + speaks via simulated switch presses
+node tools/screenshots.ts    # regenerates docs/img/*.png (replay mode: no camera, no face)
+node tools/sweep.ts          # grid-searches detector thresholds against the recorded cues
 ```
 
-Linux x64 (glibc ≥ 2.35), Windows x64 and macOS arm64 are supported by the SDK.
+```
+src/main/        Electron main: SDK IPC, camera permission, settings file, clipboard, espeak fallback
+src/preload/     bridge (SDK preload + a small window.glint API)
+src/renderer/    app.ts (consent → setup → board), gestures/, board/, signals/ (live + replay)
+src/shared/      settings schema + sanitizer (used on both sides)
+recordings/      guided.jsonl test fixture
+tools/           analysis, tuning, smoke test, screenshots
+```
+
+## Status
+
+Entry for the DEV × Presage SmartSpectra challenge (Nov 2026). Done: consent flow, scanning board, quick phrases, settings, both detectors, replay mode. Next: per-user calibration, packaged builds (AppImage / Windows installer), demo video.
