@@ -1,0 +1,45 @@
+---
+title: The board
+description: How row and column scanning works, and how to correct mistakes.
+---
+
+The highlight moves by itself, so you never have to aim. You only choose **when**.
+
+## Scanning
+
+<Steps>
+  <Step>
+    ### Rows
+
+    Each row lights up in turn. Select when your row is lit.
+  </Step>
+  <Step>
+    ### Keys
+
+    Each key in that row lights up in turn. Select when your key is lit.
+  </Step>
+  <Step>
+    ### Back to the top
+
+    After a key is chosen, scanning restarts at the top row.
+  </Step>
+</Steps>
+
+## Keys
+
+| Key | Does |
+| --- | --- |
+| A phrase on the top row | Speaks it at once and copies it. Your typed text is untouched. |
+| `␣` | Adds a space. |
+| `⌫` | Deletes the last character. |
+| `↩` | Ends every row. Leaves the row without typing, if you picked the wrong one. |
+
+If you pick a row and choose nothing for two full passes, scanning returns to the rows by itself.
+
+## Why the letters are in that order
+
+Letters are ordered by how often they appear in English, not as on a keyboard. With scanning, every position costs time, so the common letters are reached first. `E` is two steps away and `Z` is eight.
+
+## The bottom strip
+
+The strip shows the signals as Glint receives them: the eyebrow trace with its threshold, the breathing trace, whether you are talking, and your pulse. Pulse is display only.

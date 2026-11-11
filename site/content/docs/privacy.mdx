@@ -1,0 +1,51 @@
+---
+title: Privacy and consent
+description: What Glint reads, what it keeps, and what leaves your computer.
+---
+
+Glint reads your face and chest through a camera, so this page is exact about what happens to that data.
+
+## Consent
+
+The camera can only be started from the first screen, after that screen has said what is read and what is kept. It asks every session.
+The camera is released when you press **Stop** or `Esc`, when a session fails to start, and when you close the app.
+
+<Callout type="warn">
+  If the SDK reports an error **during** a session, Glint pauses and shows the message, but the camera stays on until you press **Stop**.
+</Callout>
+
+Glint reads only the person in front of the screen. If the SDK reports more than one face, Glint pauses.
+
+## What stays on your computer
+
+| Data | What happens to it |
+| --- | --- |
+| Video | Processed in memory by the SDK. Glint never writes it to disk or sends it anywhere. Presage states that all metric computation runs on the device. |
+| Signals (landmarks, breathing, pulse) | Held in memory for the session, for the detectors and the on-screen traces. Not saved. |
+| What you type or say | Not saved. Spoken text is copied to your clipboard, where other apps can read it, as with anything you copy. |
+| Settings | Saved in `settings.json` in the app's data folder: scan speed, phrases and your telemetry choice. **Forget everything** deletes it. |
+
+Your quick phrases are saved in that settings file. Avoid putting anything private in them.
+
+## What leaves your computer
+
+The SDK contacts Presage's servers to check your API key and subscription, and to download its models. Glint itself makes no other network requests. It has no analytics, no account and no AI service, and it does not use the SDK's LLM Insights feature.
+
+## SDK telemetry
+
+SDK telemetry is **off by default** in Glint, even though the SDK's own default is on. With it off, the SDK sends no telemetry.
+
+If you turn it on in Settings, the SDK sends session summaries and device readiness reports. According to [Presage](https://smartspectra.presagetech.com/docs/telemetry-and-privacy):
+
+- They contain **no video frames and no measured vitals**.
+- They do contain device model, OS version and performance figures. Readiness reports can include free-text diagnostics, such as file paths.
+- They are **not anonymous**: requests are authenticated, so they can be linked to the account that owns the API key.
+- Reports have no automatic expiry, and are governed by [Presage's privacy policy](https://api.physiology.presagetech.com/privacypolicy).
+
+## The recording in the repository
+
+`recordings/guided.jsonl` contains derived numbers from one session: a brow ratio, a breathing trace and talking flags. It has no images and no full face mesh.
+
+## Not a medical device
+
+Glint makes no diagnosis and no health judgement. Pulse is displayed only, and no decision uses it.

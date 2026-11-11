@@ -1,0 +1,36 @@
+---
+title: SDK signals
+description: The metrics Glint requests and the validation codes it responds to.
+---
+
+## Requested metrics
+
+```ts
+requestedMetrics: [...breathingMetrics, MetricType.PULSE_RATE, ...faceMetrics]
+```
+
+| Field | Used for |
+| --- | --- |
+| `face.landmarks` | The eyebrow detector. |
+| `face.talking` | Blocking the exhale gesture during speech. |
+| `breathing.upperTrace` | The exhale detector and the on-screen trace. |
+| `cardio.pulseRate` | Display only. |
+
+The bundles also deliver `face.blinking`, `face.expression`, `breathing.lowerTrace` and `breathing.rate`. Glint does not use them.
+
+## Validation
+
+Any status other than `kOk` pauses scanning and shows the SDK's hint. The codes include `kNoFaceFound`, `kMultipleFacesFound`, `kFaceNotCentered`, `kTooDark`, `kTooBright`, `kChestNotVisible`, `kCameraTuning`, `kFrameRateTooLow`, `kExcessiveMotion`, `kFaceTooClose`, `kFaceTooFar`, `kFaceTooHigh`, `kFaceTooLow` and `kFaceNotForward`.
+
+## Timing
+
+Measured on one laptop:
+
+| Signal | Warm start | First session of the day |
+| --- | --- | --- |
+| Landmarks | 1–3 s | 46 s |
+| Breathing trace | 1–3 s | 46 s |
+| Blink, talking | 4 s | 36 s |
+| Expression | 6–9 s | 48 s |
+| Pulse | 13–32 s | 60 s |
+| Breathing trace stable | 34–66 s | 51 s |

@@ -1,0 +1,14 @@
+---
+title: Settings file
+description: The format of settings.json and how it is validated.
+---
+
+Stored as `settings.json` in the app's data folder (`~/.config/Glint/` on Linux, `%APPDATA%\Glint\` on Windows).
+
+| Field | Type | Default | Rules |
+| --- | --- | --- | --- |
+| `dwellMs` | number | `1000` | Clamped to 500–3000. |
+| `telemetry` | boolean | `false` | Only a literal `true` enables it. |
+| `phrases` | string[] | Six defaults | Up to 6, each trimmed to 40 characters. An empty list removes the row. |
+
+The main process runs every read and write through `sanitize()` in `src/shared/settings.ts`, so a damaged file falls back to safe values.

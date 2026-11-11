@@ -1,0 +1,49 @@
+---
+title: Contributing
+description: Project layout, tests and tools.
+---
+
+## Commands
+
+| Command | Does |
+| --- | --- |
+| `npm start` | Builds and runs the app. `GLINT_DEVTOOLS=1` opens DevTools. |
+| `npm test` | Detectors on the recorded fixture, scanner, settings validation. |
+| `npm run typecheck` | TypeScript, no output. |
+| `npm run smoke` | Launches the app in replay mode and drives it end to end. |
+| `npm run diagram` | Regenerates the architecture image. |
+| `node tools/screenshots.ts` | Regenerates the app screenshots. |
+| `node tools/tune.ts` | Replays the fixture and prints every detector fire against the cues. |
+| `node tools/sweep.ts` | Grid-searches detector options against the cues. |
+
+None of these use a camera or spend credits.
+
+## Layout
+
+```text
+src/main/      Electron main: SDK IPC, camera permission, settings, clipboard
+src/preload/   Bridge (SDK preload + window.glint)
+src/renderer/  app.ts, gestures/, board/, signals/
+src/shared/    Settings schema and sanitizer
+recordings/    guided.jsonl test fixture
+tools/         Analysis, tuning, smoke test, screenshots, diagram
+site/          This documentation
+```
+
+## Changing a detector
+
+Run `node tools/tune.ts` before and after your change, and keep `npm test` passing. With only three examples of each gesture, it is easy to fit the noise, so prefer a reason you can explain over a better sweep score.
+
+## Making a new recording
+
+The guided-capture screen was part of the first prototype and is no longer in the app. Its last version is at `git show b1d40de^:src/renderer/probe.ts`. To turn a raw recording into a fixture, use `node tools/make-fixture.ts <raw.jsonl> <out.jsonl>`. Raw recordings are large and contain the full face mesh, so they are git-ignored.
+
+## The docs
+
+```bash
+cd site
+npm install
+npm run dev
+```
+
+Pages are MDX files in `site/content/docs`.

@@ -1,0 +1,37 @@
+---
+title: Signal sources
+description: Live camera and recorded replay, and why the rest of the app cannot tell them apart.
+---
+
+A signal source produces samples. The rest of the app does not know where they came from.
+
+```ts title="src/renderer/signals/source.ts"
+export type SignalSource = {
+  readonly kind: 'live' | 'replay';
+  start(ev: SourceEvents): Promise<void>;
+  stop(): Promise<void>;
+};
+```
+
+## Samples
+
+`extract()` reduces each raw SDK message to four kinds of sample:
+
+| `k` | Value | From |
+| --- | --- | --- |
+| `brow` | Brow-to-eye distance ÷ eye spacing | `face.landmarks` |
+| `breath` | Chest position, plus a stable flag | `breathing.upperTrace` |
+| `talk` | Boolean | `face.talking` |
+| `pulse` | Beats per minute, display only | `cardio.pulseRate` |
+
+Timestamps are microseconds since the epoch. Face and breathing samples arrive about 30 times a second.
+
+## Live
+
+`liveSource` opens the camera, hands the stream to the SDK and turns each `metrics` event into samples.
+
+It owns the camera stream rather than letting the SDK open it, to work around [a camera bug](/docs/develop/sdk-notes#camera-exposure-lock).
+
+## Replay
+
+`replaySource` plays `recordings/guided.jsonl` at real-time speed and loops. It lets you build without spending credits, and lets anyone try Glint with no camera or key.

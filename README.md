@@ -62,7 +62,7 @@ The detectors are small pure functions (`src/renderer/gestures/`), tuned and tes
 
 ## Privacy and consent
 
-- The camera starts only from the consent screen and is released on Stop, Esc, error, or closing the app.
+- The camera starts only from the consent screen and is released on Stop, Esc, a failed start, or closing the app. If the SDK reports an error mid-session, Glint pauses and the camera stays on until you press Stop.
 - Video is processed on the device by the SDK. Glint never writes it to disk or sends it anywhere.
 - Nothing you type or say is stored. Spoken text goes to the clipboard and nowhere else.
 - The only stored file is `settings.json` in the app's user-data folder. **Forget everything** deletes it.
@@ -93,9 +93,13 @@ The SDK supports Linux x64 (glibc ≥ 2.35), Windows x64 and macOS arm64.
 Builds are on the [Releases](https://github.com/yashksaini-coder/glint/releases) page (made by [CI](.github/workflows/build.yml)): `Glint-<version>-linux-x86_64.AppImage` and `Glint-<version>-win-x64.exe`. They are unsigned, so Windows SmartScreen will ask you to confirm.
 
 - **Linux:** `chmod +x Glint-*.AppImage && ./Glint-*.AppImage`. If it says *AppImages require FUSE* (Arch, Ubuntu 22.04+), run `APPIMAGE_EXTRACT_AND_RUN=1 ./Glint-*.AppImage` or install `libfuse2`.
-- **API key for an installed app:** set `PRESAGE_API_KEY` in your environment, or put `PRESAGE_API_KEY=…` in a `.env` file in the app's user-data folder (`~/.config/glint/` on Linux, `%APPDATA%\glint\` on Windows). The key is never bundled into a build.
+- **API key for an installed app:** set `PRESAGE_API_KEY` in your environment, or put `PRESAGE_API_KEY=…` in a `.env` file in the app's user-data folder (`~/.config/Glint/` on Linux, `%APPDATA%\Glint\` on Windows). The key is never bundled into a build.
 
 Build locally with `npm run dist:linux` (or `dist:win` on Windows). Output goes to `out/`.
+
+## Documentation
+
+Full docs live in [`site/`](site/), built with [Fumadocs](https://fumadocs.dev): `cd site && npm install && npm run dev`. Pages are plain MDX in [`site/content/docs`](site/content/docs), starting with [Scope](site/content/docs/scope.mdx) (what has and hasn't been tested).
 
 ## Develop
 

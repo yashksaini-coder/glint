@@ -1,0 +1,37 @@
+@import 'tailwindcss';
+@import 'fumadocs-ui/css/neutral.css';
+@import 'fumadocs-ui/css/preset.css';
+
+/* Glint's own palette, so the docs and the app look like one product. */
+:root {
+  --color-fd-primary: #0b6fa4;
+  --color-fd-primary-foreground: #ffffff;
+}
+
+.dark {
+  --color-fd-background: #0f1117;
+  --color-fd-foreground: #e9ebf0;
+  --color-fd-card: #181b24;
+  --color-fd-card-foreground: #e9ebf0;
+  --color-fd-popover: #181b24;
+  --color-fd-popover-foreground: #e9ebf0;
+  --color-fd-secondary: #181b24;
+  --color-fd-secondary-foreground: #e9ebf0;
+  --color-fd-muted: #181b24;
+  --color-fd-muted-foreground: #9aa1b2;
+  --color-fd-accent: #7fd1ff1a;
+  --color-fd-accent-foreground: #e9ebf0;
+  --color-fd-border: #2a2f3d;
+  --color-fd-ring: #7fd1ff;
+  --color-fd-primary: #7fd1ff;
+  --color-fd-primary-foreground: #062033;
+}
+
+html {
+  scrollbar-gutter: stable;
+}
+
+html > body[data-scroll-locked] {
+  margin-right: 0px !important;
+  --removed-body-scroll-bar-size: 0px !important;
+}

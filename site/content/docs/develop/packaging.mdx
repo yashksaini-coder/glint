@@ -1,0 +1,33 @@
+---
+title: Packaging
+description: How builds are made and released.
+---
+
+Builds use electron-builder. The config is in `package.json` under `build`.
+
+```bash
+npm run dist:linux   # AppImage
+npm run dist:win     # NSIS installer, on Windows
+```
+
+Output goes to `out/`.
+
+## The native runtime
+
+The SDK's native library cannot load from inside `app.asar`, so each build ships its own platform's runtime next to it, at `resources/smartspectra/`. Other platforms' runtimes are excluded.
+
+`src/main/native-path.ts` points the SDK at that folder by setting `SMARTSPECTRA_CAPI_PATH`. It must be the **first** import in `main/index.ts`, because the SDK resolves the library the moment it is required.
+
+## CI
+
+`.github/workflows/build.yml` runs on every push to `main`, on Ubuntu 22.04 and Windows: typecheck, tests, build. On Linux it also runs the smoke test against the packaged app under a virtual display.
+
+## Releasing
+
+Pushing a tag like `v0.2.0` makes CI publish a GitHub Release with both builds. electron-builder itself never publishes.
+
+## Testing a packaged build
+
+```bash
+GLINT_BIN=out/linux-unpacked/glint node tools/smoke.ts /tmp/smoke.png
+```

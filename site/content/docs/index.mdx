@@ -1,0 +1,58 @@
+---
+title: Introduction
+description: Glint is an on-screen keyboard you control with your eyebrows and your breath, through a webcam.
+---
+
+Glint is a switch-access keyboard for people who cannot reliably use their hands or voice. A highlight moves across
+a board on its own. You raise your eyebrows to pick what is highlighted, and breathe out slowly to say the sentence
+aloud. It needs a webcam and the [Presage SmartSpectra](https://smartspectra.presagetech.com/docs/nodejs) SDK. There is no
+special hardware and no Glint account.
+
+<Callout type="warn" title="Early software">
+  Glint is a challenge entry at version 0.1. It has not been tested with disabled users, and its gestures were tuned on one
+  recorded session of one person. It is not a medical device. See [Scope](/docs/scope) for exactly what has and has not been tested.
+</Callout>
+
+![The Glint board with "hello" typed, the letter T highlighted, and live eyebrow and breathing traces below](/img/board.png)
+
+## What you can do with it
+
+- **Type without hands.** Pick letters by row and then by key. See [The board](/docs/use/board).
+- **Say a common phrase in two selections.** "Yes", "I need water" and four others sit on the top row, and you can edit them. See [Settings](/docs/use/settings).
+- **Speak what you typed.** A slow breath out reads the text aloud and copies it. See [Gestures](/docs/use/gestures).
+- **Use a physical switch instead.** Anything that sends `Space` and `Enter` works.
+- **Try it with no camera.** A recorded session can drive the app. See [Basic usage](/docs/basic-usage).
+
+## How a gesture becomes speech
+
+<Steps>
+  <Step>
+    ### The webcam sees you
+
+    Frames stay in memory on your computer. The SDK turns them into face landmarks and a breathing trace.
+  </Step>
+  <Step>
+    ### A detector recognises the gesture
+
+    Small functions watch those signals for [a raised eyebrow](/docs/concepts/eyebrow-detector) or [a slow breath out](/docs/concepts/exhale-detector).
+  </Step>
+  <Step>
+    ### The scanner picks a key
+
+    An eyebrow raise selects whatever [the scanner](/docs/concepts/scanning) has highlighted.
+  </Step>
+  <Step>
+    ### Glint speaks
+
+    A slow breath out sends the sentence to the speech engine and the clipboard.
+  </Step>
+</Steps>
+
+## Where to go next
+
+<Cards>
+  <Card title="Installation" href="/docs/installation" description="Download a build or run from source." />
+  <Card title="Basic usage" href="/docs/basic-usage" description="Type your first word in about a minute." />
+  <Card title="Privacy and consent" href="/docs/privacy" description="What is read, what is kept, what leaves your computer." />
+  <Card title="Why eyebrows?" href="/docs/concepts/why-eyebrows" description="The plan was blinks. The measurements disagreed." />
+</Cards>

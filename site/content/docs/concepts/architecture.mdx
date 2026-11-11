@@ -1,0 +1,32 @@
+---
+title: Architecture
+description: The parts of Glint and how a frame becomes speech.
+---
+
+Glint is an Electron app in plain TypeScript. Everything runs on the user's computer.
+
+![Webcam frames go into the SmartSpectra SDK. Landmarks drive the eyebrow detector, the breathing trace and talking drive the exhale detector, validation pauses scanning, and pulse is display only. The scanner and exhale lead to speak and copy.](/img/architecture.png)
+
+## The three processes
+
+| Part | Path | Job |
+| --- | --- | --- |
+| Main | `src/main/` | Runs the SDK's native side. Owns camera permission, the settings file, the clipboard and the `espeak-ng` fallback. |
+| Preload | `src/preload/` | The bridge: the SDK's own preload, plus a small `window.glint` API. |
+| Renderer | `src/renderer/` | The app itself: screens, gestures, board and signal sources. Sandboxed, with no file access. |
+
+## The screens
+
+`app.ts` is a state machine with three phases:
+
+```text
+consent  ──Start camera──▶  setup  ──face + eyebrows OK──▶  board
+   │                                                          ▲
+   └──────────Try a recorded session──────────────────────────┘
+```
+
+Stop, `Esc` and a failed start all return to `consent` and release the camera. An SDK error during a session only pauses the board, and the camera stays on until Stop. The camera is opened in exactly one place, `liveSource` in `signals/presage.ts`, and that is reached only from the consent screen's button.
+
+## Pure logic, thin shell
+
+The parts that need to be right are pure functions with no knowledge of Electron or the camera: the [detectors](/docs/concepts/eyebrow-detector), the [scanner](/docs/concepts/scanning) and the settings sanitizer. That is why they can be tested on a recording in milliseconds.

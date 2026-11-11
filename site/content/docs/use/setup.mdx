@@ -1,0 +1,35 @@
+---
+title: Camera and light
+description: Where to sit and how to light your face so the SDK can read you.
+---
+
+Most tracking problems come from light. Set this up first.
+
+## Set up
+
+- **Light your face from the front.** A lamp or a window in front of you works. Overhead or back light leaves your face in shadow.
+- **Keep the camera still.** A laptop on a desk is ideal. Breathing cannot be read from a handheld camera.
+- **Keep your upper chest in view.** The breathing signal comes from your chest.
+- **Be alone in the frame.** Glint pauses if it sees more than one face.
+
+## The setup screen
+
+After you agree to the camera, Glint shows a preview, the SDK's own hint, and a checklist:
+
+| Item | Means |
+| --- | --- |
+| Face in view and well lit | The SDK has reported that all is fine for 1.5 seconds. |
+| Eyebrows tracked | Face landmarks are arriving. |
+| Breathing signal | The breathing trace is arriving. |
+
+The board opens by itself once the first two are done. The hint is the SDK's exact wording, for example *Increase light on face*.
+
+## How long it takes
+
+The first session of the day can take up to about a minute, mostly while the SDK loads its models. Later sessions start within a few seconds.
+
+The breathing signal arrives within seconds but takes 30 seconds or more to become steady, which is the **warming up** badge on the board. Exhale detection works during that time too.
+
+## While you use it
+
+If the SDK loses you, or the light drops, scanning pauses and a bar at the bottom shows the hint. It resumes by itself when the problem clears.

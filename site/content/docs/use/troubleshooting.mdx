@@ -1,0 +1,48 @@
+---
+title: Troubleshooting
+description: Symptoms and fixes for the camera, gestures, speech and installation.
+---
+
+Find your symptom, then the likely cause and the fix. Most problems come from light.
+
+## Camera
+
+| Symptom | Likely cause and fix |
+| --- | --- |
+| *Increase light on face* (`kTooDark`) | Your face is in shadow. Put a lamp or window in front of you. |
+| The preview is nearly black even in a bright room (Linux) | The camera is stuck in manual exposure, usually after a crash. Run `v4l2-ctl -d /dev/video0 -c auto_exposure=3 -c white_balance_automatic=1`. See [SDK notes](/docs/develop/sdk-notes). |
+| Stuck on the setup screen | The SDK cannot find your face. Follow the hint. The first session of the day can also take up to a minute. |
+| The board shows a *Paused* bar | The SDK lost you or saw another face. Fix what the bar says, and scanning resumes. |
+
+## Gestures
+
+| Symptom | Likely cause and fix |
+| --- | --- |
+| Raising my eyebrows does nothing | Check the **Eyebrows** trace. If it does not reach the dashed line, raise higher or improve the light. |
+| It selected once and then stopped responding | You have not relaxed. Let your eyebrows drop fully before the next raise. |
+| It picks the item before or after the one I wanted | Slow the scan speed in [Settings](/docs/use/settings). |
+| Breathing out does nothing | Breathe out for longer and more gently, and check that there is text to speak. It also will not fire while you are talking. |
+| The breathing trace is flat or erratic | Keep your upper chest in view and the camera still. Wait for the warming-up badge to clear. |
+| It spoke when I did not mean it to | A slow breath at rest looks the same as the gesture. Clear the text when you are not ready. |
+
+## Speech
+
+| Symptom | Likely cause and fix |
+| --- | --- |
+| *Copied to clipboard (no speech voice installed)* | Install `espeak-ng`. See [Linux speech](/docs/installation#linux-speech). |
+
+## SDK and key
+
+| Symptom | Likely cause and fix |
+| --- | --- |
+| *No Presage API key* | Put `PRESAGE_API_KEY` in `.env`, or see [Give an installed app your key](/docs/installation#give-an-installed-app-your-key). |
+| `kAuthenticationFailed` | The key is wrong, or the account has a problem. Check it in the Presage portal. |
+| An SDK error mentioning *Model not available* | A temporary error on Presage's servers (HTTP 503). Press **Stop** and try again a few minutes later. |
+
+## Installation
+
+| Symptom | Likely cause and fix |
+| --- | --- |
+| *AppImages require FUSE* | Run with `APPIMAGE_EXTRACT_AND_RUN=1`, or install `libfuse2`. |
+| Windows SmartScreen warning | The build is unsigned. Choose **More info**, then **Run anyway**. |
+| `GLIBC` errors on Linux | The SDK needs glibc 2.35 or newer: Ubuntu 22.04, Debian 12 or later. |

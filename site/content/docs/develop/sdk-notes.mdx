@@ -1,0 +1,25 @@
+---
+title: SDK notes
+description: Behaviour of the SmartSpectra SDK that shaped Glint, including two issues.
+---
+
+Measured against `@smartspectra/node-sdk` 3.5.0 in November 2026. The raw notes are in `docs/sdk-notes.md` in the repository.
+
+## Camera exposure lock
+
+Once running, the renderer SDK sets the camera's exposure, white balance and focus to `manual` so that the picture stays steady. It never sets them back. On Linux that setting is held by the camera driver and outlives the app, so the next session, in any app, can start almost black.
+
+Glint works around it by owning the `MediaStream`: it sets the camera to automatic, waits 1.5 seconds for the exposure to settle, hands the stream to the SDK, and sets it back to automatic before releasing it.
+
+## Temporary model errors
+
+On first use, a session failed when Presage's server answered `503 Model not available` for `phasic-bp-inference` and `expressions-inference`. A retry a few minutes later worked. Glint requests only `PULSE_RATE` rather than the whole cardio bundle, which removes the blood-pressure model from that failure path.
+
+## Things the documentation does not make obvious
+
+| Topic | Detail |
+| --- | --- |
+| Expression scores | A list of `{type, confidence}`, with confidence from 0 to 100, not 0 to 1. |
+| Breathing trace stability | The trace has no confidence of its own. `stable` comes from the breathing-rate confidence. Samples arrive long before they are stable. |
+| Sandboxed preload | A sandboxed preload cannot require the SDK's preload, so Glint bundles it in with esbuild. |
+| API key | The renderer SDK sends the key itself, so it is in renderer memory during a session. |

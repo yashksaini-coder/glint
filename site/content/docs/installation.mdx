@@ -1,0 +1,67 @@
+---
+title: Installation
+description: Download a build, or run Glint from source.
+---
+
+You need a webcam and a free API key from [physiology.presagetech.com](https://physiology.presagetech.com/auth/login).
+To look around first, you need neither: choose **Try a recorded session** on the first screen.
+
+## Download a build
+
+Builds are on the [Releases page](https://github.com/yashksaini-coder/glint/releases).
+
+<Tabs items={['Linux', 'Windows']}>
+  <Tab value="Linux">
+    ```bash
+    chmod +x Glint-*.AppImage
+    ./Glint-*.AppImage
+    ```
+
+    If it says *AppImages require FUSE*, which is normal on Arch and Ubuntu 22.04 or newer, run it like this or install `libfuse2`:
+
+    ```bash
+    APPIMAGE_EXTRACT_AND_RUN=1 ./Glint-*.AppImage
+    ```
+
+    The SDK needs glibc 2.35 or newer.
+  </Tab>
+  <Tab value="Windows">
+    Run `Glint-<version>-win-x64.exe`. The installer is unsigned, so SmartScreen asks you to confirm.
+
+    <Callout type="warn">The Windows build has been compiled in CI but has never been installed or run on a real Windows machine.</Callout>
+  </Tab>
+</Tabs>
+
+### Give an installed app your key
+
+Set `PRESAGE_API_KEY` in your environment, or create a file named `.env` in the app's data folder containing `PRESAGE_API_KEY=your-key`:
+
+| System | Folder |
+| --- | --- |
+| Linux | `~/.config/Glint/` |
+| Windows | `%APPDATA%\Glint\` |
+
+The key is never bundled into a build.
+
+## Run from source
+
+Needs Node 20 or newer. `npm install` downloads the SDK runtime for every platform, which is a few hundred MB.
+
+```bash
+git clone https://github.com/yashksaini-coder/glint
+cd glint
+npm install
+cp .env.example .env   # then put your key in PRESAGE_API_KEY
+npm start
+```
+
+## Linux speech
+
+Most Linux systems give the app no built-in voice, so Glint falls back to `espeak-ng`. Without it, your text is still copied, but nothing is said aloud.
+
+```bash
+sudo pacman -S espeak-ng     # Arch
+sudo apt install espeak-ng   # Debian, Ubuntu
+```
+
+Next: [type your first word](/docs/basic-usage).

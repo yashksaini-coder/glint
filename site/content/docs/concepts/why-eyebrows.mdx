@@ -1,0 +1,31 @@
+---
+title: Why eyebrows?
+description: The plan was a long blink to select. The measurements said otherwise.
+---
+
+Glint was designed around a long blink. It uses eyebrows because of what one recorded session showed.
+
+## How it was measured
+
+The free SDK tier is 50 minutes in total, so trial and error was not affordable. A prototype showed on-screen cues and wrote each one into the recording with a timestamp on the SDK's own clock. One session of about 2.5 minutes gave labelled examples of every gesture.
+
+## What it showed
+
+| Gesture | SDK signal | Face landmarks | Outcome |
+| --- | --- | --- | --- |
+| Close eyes for 1 s, ×5 | `blinking` true in 1 of 4,096 frames | Eye openness never fell below 75% of normal | **Not detected** |
+| Quick blink, ×5 | None | No dip | **Not detected** |
+| Raise eyebrows, ×3 | `surprise` peaked at 76–84, only briefly | Ratio rose by about 40% | **Clear from landmarks** |
+| Slow exhale, ×3 | Trace rose 2.4–7.9, then fell 6–15 | — | **Clear** |
+| Talk for 10 s | `talking` in 81% of frames | — | Usable with averaging |
+| Sit silent for 10 s | `talking` in 20% of frames | — | Too noisy to trust per frame |
+
+## Why blinks failed
+
+The person wore thick-framed glasses, which sit over the upper eyelid line, in a dim room with their face in shadow. That is the most likely reason the face model never saw a closed eye. An earlier session did record about 70 short blinks, none longer than 268 ms, so the blink signal does work in some conditions.
+
+We cannot say that blinks never work. We can say they did not work in an ordinary setting, for a person wearing glasses, which is reason enough not to depend on them.
+
+## What this does not prove
+
+This is **one person, one session, three examples of each gesture.** The thresholds were then tuned on that same data, so the results are optimistic. Expect different numbers for different faces. Per-person [calibration](/docs/reference/roadmap) is the proper answer, and it is not built yet.

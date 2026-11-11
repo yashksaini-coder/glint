@@ -1,0 +1,38 @@
+---
+title: Detector options
+description: Every threshold in the detectors and the scanner, with its default.
+---
+
+These are the defaults in the code. They are not yet adjustable in the app.
+
+## Eyebrow (`BROW_DEFAULTS`)
+
+| Option | Default | Meaning |
+| --- | --- | --- |
+| `rise` | `0.28` | Fire above baseline × (1 + rise). |
+| `rearm` | `0.1` | Re-arm once below baseline × (1 + rearm). |
+| `holdMs` | `200` | How long the rise must hold. |
+| `refractoryMs` | `800` | Minimum time between fires. |
+| `baselineAlpha` | `0.01` | How fast the baseline follows, per sample. |
+| `smoothAlpha` | `0.5` | Smoothing on the ratio, per sample. |
+| `glitch` | `1.0` | Ignore samples above baseline × (1 + glitch). |
+
+## Exhale (`EXHALE_DEFAULTS`)
+
+| Option | Default | Meaning |
+| --- | --- | --- |
+| `alpha` | `0.15` | Smoothing on the trace, per sample. |
+| `minDrop` | `6` | Minimum fall from the peak, in trace units. |
+| `minMs` | `2500` | Minimum duration of the fall. |
+| `maxSlope` | `5` | Maximum fall rate, in units per second. |
+| `maxMs` | `6000` | A peak older than this is treated as stale. |
+| `fallHysteresis` | `1` | The fall clock starts this far below the peak. |
+| `talkWindowMs` | `1000` | Window for the talking check. |
+| `talkMax` | `0.5` | Suppress above this fraction of talking frames. |
+
+## Scanner (`SCAN_DEFAULTS`)
+
+| Option | Default | Meaning |
+| --- | --- | --- |
+| `graceMs` | `350` | A select this soon after a move picks the previous item. |
+| `maxColLoops` | `2` | Unselected passes through a row before returning to rows. |

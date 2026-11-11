@@ -1,0 +1,34 @@
+---
+title: Exhale detector
+description: How a slow breath out becomes speech, and why ordinary breathing mostly does not.
+---
+
+The detector is in `src/renderer/gestures/exhale.ts`. It watches `breathing.upperTrace`, which rises on the way in and falls on the way out.
+
+## What separates a deliberate exhale
+
+Length and gentleness. On the recording:
+
+| Event | Fall duration | Slope |
+| --- | --- | --- |
+| Cued slow exhales | 2.9–6.1 s | 2.4–3.1 units/s |
+| Falls during speech | 0.97–2.37 s | 3.7–8.6 units/s |
+
+## How it decides
+
+It fires when the smoothed trace has:
+
+- fallen at least **6 units** from its last peak,
+- been falling for at least **2.5 seconds**,
+- fallen no faster than **5 units per second**,
+- and the user was not talking for more than half of the last second.
+
+After firing, it waits for the next inhale before it can fire again. The fall clock starts only once the trace is 1 unit below the peak, so a plateau before a short fall does not count towards the duration.
+
+## Results
+
+On the recording: **3 of 3 cued exhales, none during speech.** It fired two more times with no cue, at 35.9 s and 132.5 s. The second is plainly a real slow breath out at rest: no detector reading only the breathing trace could reject it.
+
+That is why the protection is in the product: an exhale with no text typed does nothing.
+
+Options and defaults are listed in [Detector options](/docs/reference/detector-options).

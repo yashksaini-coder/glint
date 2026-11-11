@@ -1,0 +1,36 @@
+---
+title: Scope
+description: What has been tested, what has not, and what Glint does not claim.
+---
+
+Glint is at version 0.1. This page says plainly what has been checked, so you can decide whether it fits what you need.
+
+## What has and has not been tested
+
+| Area | Status |
+| --- | --- |
+| Board, scanner, settings | **Tested.** Unit tests, plus an end-to-end test that drives the packaged Linux app on every CI run. |
+| Eyebrow and exhale detectors | **Tested on one recording.** One person, one session, three examples of each gesture. Results are on [Why eyebrows?](/docs/concepts/why-eyebrows). |
+| SDK signals on a live camera | **Tested in an early prototype**, which is where the recording came from. |
+| The finished app on a live camera | **Not yet run.** The setup screen and live source were built afterwards and have only run in replay mode. |
+| Use by disabled people | **Not tested.** Nobody who needs switch access has tried Glint. |
+| Linux AppImage | **Tested** in replay mode, locally and in CI. |
+| Windows installer | **Builds in CI. Never installed or run** on a Windows machine. |
+| macOS | **No build.** The SDK supports Apple Silicon, but Glint has no macOS packaging. |
+| Calibration | **Not built.** Thresholds are the same for everyone. |
+| Word prediction | **Not built.** |
+
+## What Glint does not claim
+
+Glint is **not a medical device**. It makes no diagnosis and no health judgement. Pulse is shown only so you can see that you are
+being read, and no decision uses it.
+
+Do not rely on Glint as your only way to call for help. A missed gesture is expected behaviour: on the test recording,
+the eyebrow detector caught two of three raises.
+
+## Known limits
+
+- **Light matters.** The camera needs light on your face. In dim light, the SDK pauses the app with a hint.
+- **Blinks do not work as a gesture** in the conditions we tested: thick-framed glasses in a dim room.
+- **The free SDK tier is small.** At the time of writing, 100 credits, where 1 credit is 30 seconds of measurement. That is 50 minutes.
+- **Linux speech needs an extra package.** See [Installation](/docs/installation#linux-speech).

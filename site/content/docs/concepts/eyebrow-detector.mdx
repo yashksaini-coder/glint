@@ -1,0 +1,43 @@
+---
+title: Eyebrow detector
+description: How a raised eyebrow becomes a select.
+---
+
+The detector is in `src/renderer/gestures/brow.ts`. It takes one brow-ratio sample at a time and returns `true` once per raise.
+
+## The signal
+
+The ratio is the distance from eyebrow to upper eyelid, divided by the distance between the outer eye corners. Dividing by eye spacing means moving closer to the camera does not change it. It uses landmarks 105 and 334 (eyebrows), 159 and 386 (eyelids), and 33 and 263 (eye corners).
+
+## How it decides
+
+<Steps>
+  <Step>
+    ### Smooth
+
+    Raw face-mesh brow height jitters by about ±10% between frames, so it is smoothed first.
+  </Step>
+  <Step>
+    ### Compare with a personal baseline
+
+    The baseline follows your resting position over a few seconds, and only updates while your eyebrows are down.
+  </Step>
+  <Step>
+    ### Fire on a held rise
+
+    Above 28% over the baseline for 200 ms, it fires.
+  </Step>
+  <Step>
+    ### Wait for a relax
+
+    It re-arms only after the ratio drops below 10% over the baseline, so one long raise cannot select twice.
+  </Step>
+</Steps>
+
+Samples more than double the baseline are dropped as tracking glitches. One appeared in the first long recording.
+
+## Results
+
+On the recording: **2 of 3 cued raises, 0 false selects.** The third was missed because the eyebrows stayed 14–26% up after the second raise and never re-armed.
+
+Options and defaults are listed in [Detector options](/docs/reference/detector-options).

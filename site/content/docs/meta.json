@@ -1,0 +1,10 @@
+{
+  "title": "Glint",
+  "pages": [
+    "index", "scope", "installation", "basic-usage", "privacy",
+    "---Use Glint---", "...use",
+    "---Concepts---", "...concepts",
+    "---Develop---", "...develop",
+    "---Reference---", "...reference"
+  ]
+}
