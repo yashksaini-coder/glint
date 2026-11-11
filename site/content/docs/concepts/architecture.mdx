@@ -26,7 +26,7 @@ consent  ──Start camera──▶  setup  ──face + eyebrows OK──▶  
    └──────────Try a recorded session──────────────────────────┘
 ```
 
-Stop, `Esc` and a failed start all return to `consent` and release the camera. An SDK error during a session only pauses the board, and the camera stays on until Stop. The camera is opened in exactly one place, `liveSource` in `signals/presage.ts`, and that is reached only from the consent screen's button.
+Stop, `Esc` and any error that ends the session all return to `consent` and release the camera. A recoverable problem only pauses the board. The camera is opened in exactly one place, `liveSource` in `signals/presage.ts`, and that is reached only from the consent screen's button.
 
 ## Pure logic, thin shell
 

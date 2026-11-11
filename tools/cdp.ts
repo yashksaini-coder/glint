@@ -9,7 +9,8 @@ export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 export async function launch(port = 9333) {
   // GLINT_BIN=out/linux-unpacked/glint runs the same checks against a packaged build.
   const [cmd, args] = process.env.GLINT_BIN ? [process.env.GLINT_BIN, []] : ['npx', ['electron', '.']];
-  const proc = spawn(cmd, [...args, `--remote-debugging-port=${port}`], { stdio: 'ignore', detached: true });
+  const extra = process.env.GLINT_ARGS?.split(' ') ?? []; // e.g. Chromium's fake-camera flags
+  const proc = spawn(cmd, [...args, ...extra, `--remote-debugging-port=${port}`], { stdio: 'ignore', detached: true });
   let target: { webSocketDebuggerUrl: string } | undefined;
   for (let i = 0; i < 40 && !target; i++) {
     await sleep(500);

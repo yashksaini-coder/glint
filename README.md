@@ -62,11 +62,11 @@ The detectors are small pure functions (`src/renderer/gestures/`), tuned and tes
 
 ## Privacy and consent
 
-- The camera starts only from the consent screen and is released on Stop, Esc, a failed start, or closing the app. If the SDK reports an error mid-session, Glint pauses and the camera stays on until you press Stop.
+- The camera starts only from the consent screen and is released on Stop, Esc, any error that ends the session, or closing the app.
 - Video is processed on the device by the SDK. Glint never writes it to disk or sends it anywhere.
 - Nothing you type or say is stored. Spoken text goes to the clipboard and nowhere else.
 - The only stored file is `settings.json` in the app's user-data folder. **Forget everything** deletes it.
-- SDK telemetry (session summaries and readiness reports; no frames, no vitals) is **off** unless you turn it on. See [Presage telemetry & privacy](https://smartspectra.presagetech.com/docs/telemetry-and-privacy).
+- SDK telemetry (session summaries and readiness reports; no frames, no vitals, but not anonymous: it can be linked to your Presage account) is **off** unless you turn it on. See [Presage telemetry & privacy](https://smartspectra.presagetech.com/docs/telemetry-and-privacy).
 - No LLM Insights, no AI service, no analytics, no accounts.
 - **Glint is not a medical device** and makes no health judgements.
 
@@ -99,7 +99,7 @@ Build locally with `npm run dist:linux` (or `dist:win` on Windows). Output goes 
 
 ## Documentation
 
-Full docs live in [`site/`](site/), built with [Fumadocs](https://fumadocs.dev): `cd site && npm install && npm run dev`. Pages are plain MDX in [`site/content/docs`](site/content/docs), starting with [Scope](site/content/docs/scope.mdx) (what has and hasn't been tested).
+**[yashksaini-coder.github.io/glint](https://yashksaini-coder.github.io/glint/)**. The source is in [`site/`](site/), built with [Fumadocs](https://fumadocs.dev): `cd site && npm install && npm run dev`. Pages are plain MDX in [`site/content/docs`](site/content/docs), starting with [Scope](site/content/docs/scope.mdx) (what has and hasn't been tested).
 
 ## Develop
 

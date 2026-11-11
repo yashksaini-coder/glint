@@ -1,6 +1,6 @@
 // Live source: SmartSpectra SDK on the webcam. The camera is opened here and nowhere else, and only
 // after the consent state (see app.ts). Video stays in memory; only decoded numbers leave this file.
-import { SmartSpectraSDK, ValidationCode, MetricType, breathingMetrics, faceMetrics } from '@smartspectra/node-sdk/renderer';
+import { SmartSpectraSDK, ValidationCode, ProcessingStatus, MetricType, breathingMetrics, faceMetrics } from '@smartspectra/node-sdk/renderer';
 import { decodeMetrics, Metrics } from '@smartspectra/node-sdk/messages';
 import { extract } from '../gestures/extract.ts';
 import type { SignalSource, SourceEvents } from './source.ts';
@@ -41,7 +41,10 @@ export function liveSource(apiKey: string, opts: { record?: boolean; telemetry?:
           requestedMetrics: [...breathingMetrics, MetricType.PULSE_RATE, ...faceMetrics],
         });
         sdk.on('validationStatus', (code, _ts, hint) => ev.validation(code === ValidationCode.kOk, nameOf(code), hint));
-        sdk.on('error', (code, msg) => ev.error(`SDK error ${code}: ${msg}`));
+        let lastError = 'The SDK stopped with an error.';
+        sdk.on('error', (code, msg, retryable) => { lastError = `SDK error ${code}: ${msg}`; ev.error(lastError, !retryable); });
+        // kError ends the session whatever the last error claimed; frames sent after it are only dropped.
+        sdk.on('processingStatus', (status) => { if (status === ProcessingStatus.kError) ev.error(lastError, true); });
         sdk.on('metrics', (buf) => {
           const m = Metrics.toObject(decodeMetrics(buf), { longs: Number, defaults: false });
           if (opts.record) window.glint.frame(JSON.stringify({ m }));

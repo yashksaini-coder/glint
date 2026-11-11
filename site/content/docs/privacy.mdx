@@ -9,11 +9,7 @@ Glint reads your face and chest through a camera, so this page is exact about wh
 ## Consent
 
 The camera can only be started from the first screen, after that screen has said what is read and what is kept. It asks every session.
-The camera is released when you press **Stop** or `Esc`, when a session fails to start, and when you close the app.
-
-<Callout type="warn">
-  If the SDK reports an error **during** a session, Glint pauses and shows the message, but the camera stays on until you press **Stop**.
-</Callout>
+The camera is released when you press **Stop** or `Esc`, when an error ends the session, and when you close the app. A recoverable problem, such as poor light, only pauses Glint, and the camera stays on so it can resume.
 
 Glint reads only the person in front of the screen. If the SDK reports more than one face, Glint pauses.
 

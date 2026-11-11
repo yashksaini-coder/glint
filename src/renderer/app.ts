@@ -58,7 +58,10 @@ async function start(kind: 'live' | 'replay') {
     await source.start({
       sample: onSample,
       validation: onValidation,
-      error: (msg) => { $('setup-hint').textContent = msg; showPaused(msg); },
+      error: (msg, fatal) => {
+        if (fatal) { void stop().then(() => { $('consent-error').textContent = msg; }); return; } // fail closed: the camera goes off
+        $('setup-hint').textContent = msg; showPaused(msg);
+      },
       stream: (s) => { $<HTMLVideoElement>('setup-video').srcObject = s; $<HTMLVideoElement>('board-video').srcObject = s; },
     });
     $('board-video').hidden = kind !== 'live';

@@ -69,7 +69,7 @@
     <p>Glint turns <strong>raised eyebrows</strong> into "select" and a <strong>slow breath out</strong> into "speak", read through this computer's webcam by the Presage SmartSpectra SDK.</p>
     <ul>
       <li>Only the person in front of this screen is read. If more than one face is visible, Glint pauses.</li>
-      <li>The camera starts only when you press <em>Start camera</em> and stops when you press <em>Stop</em> or close the app.</li>
+      <li>The camera starts only when you press <em>Start camera</em>. It stops when you press <em>Stop</em>, close the app, or an error ends the session.</li>
       <li>Video is processed on this device by the SDK. Glint never saves it or sends it anywhere.</li>
       <li>Nothing you type or say is stored. Spoken text is copied to the clipboard; that is the only place it goes.</li>
       <li>SDK telemetry is <strong>off</strong>. Glint uses no AI service, no analytics and no account.</li>
@@ -87,7 +87,7 @@
         <input id="dwell" type="range" min="500" max="3000" step="100"></label>
       <label>Quick phrases (one per line, up to 6, shown as the top row; selecting one speaks it at once)<br>
         <textarea id="phrases" rows="6" cols="40"></textarea></label>
-      <label class="row"><input id="telemetry" type="checkbox"> Send SmartSpectra SDK telemetry (session summaries and readiness reports; no video, no vitals). Off by default. Details: smartspectra.presagetech.com/docs/telemetry-and-privacy</label>
+      <label class="row"><input id="telemetry" type="checkbox"> Send SmartSpectra SDK telemetry: session summaries and readiness reports, with no video and no vitals. It is not anonymous and can be linked to your Presage account. Off by default. Details: smartspectra.presagetech.com/docs/telemetry-and-privacy</label>
       <div class="row">
         <button id="settings-save">Save settings</button>
         <button id="settings-forget">Forget everything</button>

@@ -3,7 +3,7 @@ import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { TopCells } from '@/components/docs/topbar';
 import { BoardScene } from '@/components/home/board-scene';
 import { StartTabs } from '@/components/home/start-tabs';
-import { links } from '@/lib/shared';
+import { basePath, links } from '@/lib/shared';
 
 const features = [
   { t: 'Eyebrow select.', d: 'Raise your eyebrows when the item you want is lit. Relax, and go again.', chips: ['landmarks', 'baseline', 'hold'], href: '/docs/concepts/eyebrow-detector' },
@@ -24,7 +24,7 @@ export default function Landing() {
         <div className="g-hero-bg absolute inset-0" aria-hidden />
         <header className="relative flex h-11 shrink-0 items-center gap-2.5 border-b px-4">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/icon.svg" alt="" width={20} height={20} />
+          <img src={`${basePath}/icon.svg`} alt="" width={20} height={20} />
           <span className="g-caps text-fd-foreground">Glint</span>
         </header>
         <div className="relative min-h-0 flex-1 px-4 py-3 max-lg:h-96 max-lg:flex-none">
