@@ -1,0 +1,42 @@
+/* Styles for components/diagrams/concepts.tsx. Colour only through the --gd-* tokens. */
+.gd-canvas svg text.gcp-muted { fill: var(--gd-muted); }
+.gd-canvas svg text.gcp-b { font-weight: 600; }
+.gd-canvas svg text.gcp-mono { font-family: var(--font-mono); }
+.gd-canvas svg text.gcp-t { font-size: 13.5px; }
+.gd-canvas svg text.gcp-t.gcp-mono { font-size: 13px; }
+
+.gcp-ink { --c: var(--gd-muted); }
+.gcp-muted { --c: var(--gd-muted); }
+.gcp-blue { --c: var(--gd-blue); }
+.gcp-gold { --c: var(--gd-gold); }
+.gcp-red { --c: var(--gd-red); }
+
+.gcp-box { fill: var(--gd-surface); stroke: var(--gd-line); }
+.gcp-zone { fill: none; stroke: var(--gd-line); }
+.gcp-strong { stroke: var(--gd-ink); }
+.gcp-outside { stroke-dasharray: 5 4; }
+.gcp-arrow polyline { fill: none; stroke: var(--c); stroke-width: 1.5; }
+.gcp-arrow polygon { fill: var(--c); }
+.gcp-wire { stroke: var(--c); stroke-width: 1.5; }
+.gcp-boundary { stroke: var(--c); stroke-width: 1.5; stroke-dasharray: 7 5; }
+.gcp-grid { stroke: var(--gd-line); stroke-width: 1; opacity: 0.55; }
+.gcp-dash { stroke-dasharray: 4 4; }
+
+.gcp-bar { fill: var(--gd-surface-2); stroke: var(--gd-blue); stroke-width: 1.5; }
+.gcp-grace { fill: var(--gd-gold); fill-opacity: 0.55; stroke: none; }
+.gcp-dot { fill: var(--gd-red); stroke: var(--color-fd-card); stroke-width: 2; }
+
+.gcp-state { stroke: none; fill-opacity: 0.3; }
+.gcp-s-auto { fill: var(--gd-green); }
+.gcp-s-manual { fill: var(--gd-gold); }
+.gcp-s-bad { fill: var(--gd-red); }
+
+.gcp-warm { fill: var(--gd-blue); }
+.gcp-cold { fill: var(--gd-gold); stroke: var(--color-fd-card); stroke-width: 2; }
+
+.gcp-brow { fill: none; stroke: var(--gd-gold); stroke-width: 3; }
+.gcp-eye { fill: var(--gd-surface); stroke: var(--gd-muted); stroke-width: 1.5; }
+.gcp-pupil { fill: var(--gd-ink); }
+.gcp-breath { fill: none; stroke: var(--gd-blue); stroke-width: 3; }
+.gcp-key { fill: var(--gd-surface); stroke: var(--gd-line); }
+.gcp-key-on { fill: var(--gd-gold); fill-opacity: 0.45; stroke: var(--gd-gold); }

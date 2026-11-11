@@ -1,0 +1,23 @@
+/* Tokens and frame shared by every docs figure. Per-figure styles live in the diagrams-*.css files. */
+:root {
+  --gd-ink: #10131a; --gd-muted: #566072; --gd-line: #10131a33; --gd-surface: #eef2f7; --gd-surface-2: #dfe5ee;
+  --gd-blue: #0b6fa4; --gd-gold: #a87400; --gd-green: #187a4f; --gd-red: #c0392b;
+}
+.dark {
+  --gd-ink: #e9ebf0; --gd-muted: #9aa1b2; --gd-line: #ffffff33; --gd-surface: #1a1e29; --gd-surface-2: #232836;
+  --gd-blue: #7fd1ff; --gd-gold: #ffd166; --gd-green: #6ee7a8; --gd-red: #ff8f7f;
+}
+.gd-figure { margin: 1.75rem 0; border: 1px solid var(--color-fd-border); background: var(--color-fd-card); }
+/* Narrow screens scroll the figure sideways; the shadows mark the side with more to see. */
+.gd-canvas {
+  padding: 1.25rem; overflow-x: auto;
+  background:
+    linear-gradient(to right, var(--color-fd-card) 30%, transparent) left / 2.5rem 100% no-repeat local,
+    linear-gradient(to left, var(--color-fd-card) 30%, transparent) right / 2.5rem 100% no-repeat local,
+    radial-gradient(farthest-side at 0 50%, #0003, transparent) left / 0.875rem 100% no-repeat scroll,
+    radial-gradient(farthest-side at 100% 50%, #0003, transparent) right / 0.875rem 100% no-repeat scroll;
+}
+.gd-canvas:focus-visible { outline: 2px solid var(--color-fd-ring, currentColor); outline-offset: -2px; }
+.gd-canvas svg { display: block; width: 100%; height: auto; min-width: 38rem; }
+.gd-canvas svg text { font-family: var(--font-sans); fill: var(--gd-ink); }
+.gd-caption { padding: 0.625rem 1.25rem; border-top: 1px solid var(--color-fd-border); font-size: 0.8125rem; line-height: 1.5; color: var(--color-fd-muted-foreground); }

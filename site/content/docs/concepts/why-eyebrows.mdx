@@ -16,10 +16,14 @@ The free SDK tier is 50 minutes in total, so trial and error was not affordable.
 | --- | --- | --- | --- |
 | Close eyes for 1 s, ×5 | `blinking` true in 1 of 4,096 frames | Eye openness never fell below 75% of normal | **Not detected** |
 | Quick blink, ×5 | None | No dip | **Not detected** |
-| Raise eyebrows, ×3 | `surprise` peaked at 76–84, only briefly | Ratio rose by about 40% | **Clear from landmarks** |
+| Raise eyebrows, ×3 | `surprise` peaked at 76–84, only briefly | Smoothed ratio rose 31.6–33.5% | **Clear from landmarks** |
 | Slow exhale, ×3 | Trace rose 2.4–7.9, then fell 6–15 | — | **Clear** |
 | Talk for 10 s | `talking` in 81% of frames | — | Usable with averaging |
 | Sit silent for 10 s | `talking` in 20% of frames | — | Too noisy to trust per frame |
+
+The eyebrow signal itself separates the gestures cleanly. Blinks barely moved it, and raises went past the fire line.
+
+<CuePeaksChart />
 
 ## Why blinks failed
 

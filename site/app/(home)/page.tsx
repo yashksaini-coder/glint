@@ -1,16 +1,17 @@
 import Link from 'next/link';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { TopCells } from '@/components/docs/topbar';
-import { BoardScene } from '@/components/home/board-scene';
+import { StackScene } from '@/components/home/stack-scene';
 import { StartTabs } from '@/components/home/start-tabs';
-import { basePath, links } from '@/lib/shared';
+import { GlintMark } from '@/components/logo';
+import { links } from '@/lib/shared';
 
 const features = [
   { t: 'Eyebrow select.', d: 'Raise your eyebrows when the item you want is lit. Relax, and go again.', chips: ['landmarks', 'baseline', 'hold'], href: '/docs/concepts/eyebrow-detector' },
   { t: 'Breath to speak.', d: 'A slow breath out reads your sentence aloud and copies it.', chips: ['chest trace', 'slope', 'talking'], href: '/docs/concepts/exhale-detector' },
   { t: 'Scanning board.', d: 'The highlight moves by itself. You only choose when, never where.', chips: ['rows', 'keys', 'grace'], href: '/docs/concepts/scanning' },
   { t: 'Quick phrases.', d: '“I need water”, in two selections. A carer can edit all six.', chips: ['editable', 'instant'], href: '/docs/use/settings' },
-  { t: 'Consent first.', d: 'The camera starts only after you agree. Video never leaves your computer.', chips: ['on-device', 'telemetry off'], href: '/docs/privacy' },
+  { t: 'Consent first.', d: 'The camera starts only after you agree. Metrics are computed on your computer; the SDK goes online only for its key and models, plus telemetry if you turn it on.', chips: ['on-device', 'telemetry off'], href: '/docs/privacy' },
   { t: 'Measured, not assumed.', d: 'The plan was blinks. A recorded session said no, so the design changed.', chips: ['ground truth', 'honest numbers'], href: '/docs/concepts/why-eyebrows' },
 ];
 const builtOn = ['SmartSpectra SDK', 'Electron', 'TypeScript', 'esbuild', 'Web Speech', 'espeak-ng'];
@@ -23,12 +24,11 @@ export default function Landing() {
       <section className="relative flex flex-col overflow-hidden border-b lg:sticky lg:top-0 lg:h-screen lg:border-e lg:border-b-0">
         <div className="g-hero-bg absolute inset-0" aria-hidden />
         <header className="relative flex h-11 shrink-0 items-center gap-2.5 border-b px-4">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={`${basePath}/icon.svg`} alt="" width={20} height={20} />
+          <GlintMark />
           <span className="g-caps text-fd-foreground">Glint</span>
         </header>
-        <div className="relative min-h-0 flex-1 px-4 py-3 max-lg:h-96 max-lg:flex-none">
-          <BoardScene />
+        <div className="relative min-h-0 flex-1 px-4 py-3 max-lg:h-[min(34rem,92vw)] max-lg:flex-none">
+          <StackScene />
         </div>
         <div className="relative px-7 pt-6 pb-8">
           <p className="mb-5 inline-flex items-center gap-2 border bg-fd-background/60 px-3 py-1.5 text-[0.8125rem] text-fd-muted-foreground">

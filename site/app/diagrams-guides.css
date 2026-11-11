@@ -1,0 +1,9 @@
+/* Text roles for the figures in components/diagrams/guides.tsx. */
+.gg text { font-size: 14px; }
+.gg text.gg-s { font-size: 13px; }
+.gg text.gg-b { font-weight: 600; }
+.gg text.gg-h { font-size: 15px; font-weight: 600; }
+.gg text.gg-k { font-size: 18px; font-weight: 600; }
+.gd-canvas .gg text.gg-m { fill: var(--gd-muted); }
+.gd-canvas .gg text.gg-g { fill: var(--gd-green); }
+.gd-canvas .gg text.gg-r { fill: var(--gd-red); }

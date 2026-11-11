@@ -17,6 +17,8 @@ Output goes to `out/`.
 
 The SDK's native library cannot load from inside `app.asar`, so each build ships its own platform's runtime next to it, at `resources/smartspectra/`. Other platforms' runtimes are excluded.
 
+<PackageLayout />
+
 `src/main/native-path.ts` points the SDK at that folder by setting `SMARTSPECTRA_CAPI_PATH`. It must be the **first** import in `main/index.ts`, because the SDK resolves the library the moment it is required.
 
 ## CI

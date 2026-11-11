@@ -6,6 +6,8 @@ description: Live camera and recorded replay, and why the rest of the app cannot
 
 A signal source produces samples. The rest of the app does not know where they came from.
 
+<SourceConvergence />
+
 ```ts title="src/renderer/signals/source.ts"
 export type SignalSource = {
   readonly kind: 'live' | 'replay';

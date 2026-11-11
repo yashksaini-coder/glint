@@ -6,9 +6,9 @@ description: The parts of Glint and how a frame becomes speech.
 
 Glint is an Electron app in plain TypeScript. Everything runs on the user's computer.
 
-![Webcam frames go into the SmartSpectra SDK. Landmarks drive the eyebrow detector, the breathing trace and talking drive the exhale detector, validation pauses scanning, and pulse is display only. The scanner and exhale lead to speak and copy.](/img/architecture.png)
+<Pipeline />
 
-## The three processes
+## The three parts
 
 | Part | Path | Job |
 | --- | --- | --- |
@@ -16,15 +16,15 @@ Glint is an Electron app in plain TypeScript. Everything runs on the user's comp
 | Preload | `src/preload/` | The bridge: the SDK's own preload, plus a small `window.glint` API. |
 | Renderer | `src/renderer/` | The app itself: screens, gestures, board and signal sources. Sandboxed, with no file access. |
 
+Main and the renderer are separate operating-system processes. The preload runs inside the renderer's process, in its own isolated JavaScript world.
+
+<ProcessBoundaries />
+
 ## The screens
 
 `app.ts` is a state machine with three phases:
 
-```text
-consent  ──Start camera──▶  setup  ──face + eyebrows OK──▶  board
-   │                                                          ▲
-   └──────────Try a recorded session──────────────────────────┘
-```
+<ScreenStates />
 
 Stop, `Esc` and any error that ends the session all return to `consent` and release the camera. A recoverable problem only pauses the board. The camera is opened in exactly one place, `liveSource` in `signals/presage.ts`, and that is reached only from the consent screen's button.
 

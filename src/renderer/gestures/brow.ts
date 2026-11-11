@@ -2,7 +2,7 @@
 // is still up (rise held for holdMs), then waits for the brow to come back down before re-arming.
 
 export const BROW_DEFAULTS = {
-  rise: 0.28,         // fire above baseline × (1 + rise) on the smoothed ratio; cued raises reached +29…+41%
+  rise: 0.28,         // fire above baseline × (1 + rise) on the smoothed ratio; cued raises peaked at +32…+34% raw, 31.6–33.5% smoothed (docs: why-eyebrows)
   rearm: 0.1,         // re-arm once back below baseline × (1 + rearm): the user must relax between raises
   holdMs: 200,
   refractoryMs: 800,

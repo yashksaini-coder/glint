@@ -18,6 +18,8 @@ rows ──select──▶ cols ──select──▶ key returned, back to rows
 
 People react after they see a change. If a select arrives within 350 ms of the highlight moving, the user was almost certainly reacting to the previous item, so the scanner picks that one. This matters more for a gesture than for a key press, because the gesture itself takes time to detect.
 
+<ScanTimeline />
+
 ## The timer
 
 The app schedules each step with a timer, restarted on every select, so you always get a full step after a gesture. It does not advance while the SDK's validation is failing.

@@ -12,6 +12,8 @@ Once running, the renderer SDK sets the camera's exposure, white balance and foc
 
 Glint works around it by owning the `MediaStream`: it sets the camera to automatic, waits 1.5 seconds for the exposure to settle, hands the stream to the SDK, and sets it back to automatic before releasing it.
 
+<ExposureLock />
+
 ## Temporary model errors
 
 On first use, a session failed when Presage's server answered `503 Model not available` for `phasic-bp-inference` and `expressions-inference`. A retry a few minutes later worked. Glint requests only `PULSE_RATE` rather than the whole cardio bundle, which removes the blood-pressure model from that failure path.

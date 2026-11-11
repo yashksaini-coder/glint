@@ -1,0 +1,122 @@
+/* Landing hero: the exploded isometric stack (components/home/stack-scene.tsx). */
+.g-hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.75rem; }
+.g-hero-bg {
+  background-image: linear-gradient(var(--color-fd-border) 1px, transparent 1px), linear-gradient(90deg, var(--color-fd-border) 1px, transparent 1px);
+  background-size: 44px 44px; opacity: 0.35;
+  mask-image: radial-gradient(ellipse at 40% 30%, black, transparent 75%);
+}
+
+/* The still frame. Everything here is what prefers-reduced-motion shows. */
+.g-iso { width: 100%; height: 100%; overflow: visible; --t0: 1.5s; }
+.g-iso polygon { stroke: var(--g-iso-line); stroke-width: 1; stroke-linejoin: round; }
+.g-iso-top { fill: var(--g-iso-top); }
+.g-iso-mid { fill: var(--g-iso-mid); }
+.g-iso-dark { fill: var(--g-iso-dark); }
+.g-iso-rail { stroke: var(--g-iso-line); stroke-dasharray: 3 4; }
+.g-iso-glow { fill: var(--g-iso-accent); opacity: 0.4; }
+.g-iso-streak { stroke: var(--g-iso-accent); stroke-width: 4; stroke-linecap: round; opacity: 0.45; }
+.g-iso-core { fill: var(--g-iso-accent); }
+.g-iso-pulse, .g-iso-lit, .g-iso-flash, .g-iso-step { opacity: 0; }
+.g-iso .g-iso-plate-on { fill: color-mix(in srgb, var(--g-iso-accent) 32%, transparent); stroke: var(--g-iso-accent); stroke-width: 1.5; }
+.g-iso .g-iso-module-on { fill: color-mix(in srgb, var(--g-iso-lit) 45%, transparent); stroke: var(--g-iso-lit); stroke-width: 1.5; }
+
+.g-iso-lead { stroke: var(--g-iso-line); }
+.g-iso-lead-on { stroke: var(--g-iso-accent); stroke-width: 1.5; }
+.g-iso-dot { fill: var(--g-iso-accent); }
+.g-iso-title { fill: var(--color-fd-foreground); font-family: var(--font-mono); font-size: 14px; font-weight: 500; letter-spacing: 0.1em; }
+.g-iso-num { fill: var(--g-iso-accent); }
+.g-iso-sub { fill: var(--color-fd-muted-foreground); font-family: var(--font-sans); font-size: 13.5px; }
+
+.g-iso-shadow { fill: var(--g-iso-mid); opacity: 0.35; }
+.g-iso-lens { fill: var(--g-iso-top); stroke: var(--g-iso-line); }
+.g-iso-lens-in { fill: var(--g-iso-accent); }
+.g-iso-dots { fill: var(--g-iso-key); opacity: 0.6; }
+.g-iso-brows { fill: var(--g-iso-accent); }
+.g-iso-trace { fill: none; stroke: var(--g-iso-accent); stroke-width: 1.75; stroke-linejoin: round; }
+.g-iso-icon { fill: none; stroke: var(--g-iso-accent); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.g-iso-paper { stroke: var(--g-iso-key); stroke-width: 2; stroke-linecap: round; opacity: 0.55; }
+.g-iso-ripple { fill: none; stroke: var(--g-iso-accent); stroke-width: 2.5; stroke-linecap: round; }
+
+.g-iso-key { fill: var(--g-iso-key); font-family: var(--font-mono); font-size: 14px; font-weight: 500; }
+.g-iso-key-on { fill: #2a1d00; font-weight: 700; }
+.g-iso .g-iso-keylit { fill: var(--g-iso-lit); stroke: var(--g-iso-lit); }
+.g-iso .g-iso-keyscan { fill: color-mix(in srgb, var(--g-iso-accent) 75%, white); stroke: var(--g-iso-accent); }
+.g-iso .g-iso-rowlit { fill: color-mix(in srgb, var(--g-iso-accent) 22%, transparent); stroke: var(--g-iso-accent); stroke-width: 1.5; }
+
+/* The story, one 15 s loop. 0-1.5 s the closed stack opens; --at is each cue, in seconds after that
+   (hence --t0); from 13.2 s the stack closes again. Keyframe percentages are of the 15 s. */
+@media (prefers-reduced-motion: no-preference) {
+  .g-iso { animation: g-iso-fade 0.5s linear both; }
+  .g-iso-in { animation: g-iso-stack 15s calc(var(--i) * 60ms) infinite both; }
+  /* Its own short period, out of phase from plate to plate, so the stack breathes. */
+  .g-iso-float { animation: g-iso-float 4s ease-in-out calc(var(--i) * -0.6s) infinite; }
+  .g-iso-rails, .g-iso-tags { animation: g-iso-tags 15s linear infinite both; }
+
+  .g-iso-lit, .g-iso-label, .g-iso-step, .g-iso-gold, .g-iso-pulse, .g-iso-ripple, .g-iso-lift {
+    animation-duration: 15s; animation-timing-function: linear; animation-iteration-count: infinite;
+    animation-fill-mode: both; animation-delay: calc(var(--t0) + var(--at));
+  }
+  .g-iso-label { --off: 0.7; }
+  .g-iso-w-s { animation-name: g-iso-on-s; }
+  .g-iso-w-b { animation-name: g-iso-on-b; }
+  .g-iso-w-e { animation-name: g-iso-on-e; }
+  .g-iso-lift { animation-timing-function: ease-out; }
+  .g-iso-lift-s { animation-name: g-iso-lift-s; }
+  .g-iso-lift-b { animation-name: g-iso-lift-b; }
+  .g-iso-lift-e { animation-name: g-iso-lift-e; }
+  .g-iso-step { animation-name: g-iso-step; }
+  .g-iso-gold { animation-name: g-iso-gold; }
+  .g-iso-pulse { animation-name: g-iso-pulse; animation-timing-function: ease-in-out; }
+  .g-iso-ripple { animation-name: g-iso-ripple; }
+
+  /* Tied to the two selects, 4.5 s (enter the row) and 6.9 s (pick the key). */
+  .g-iso-brow { animation: g-iso-brow 15s ease-in-out var(--t0) infinite both; }
+  .g-iso-star { transform-box: fill-box; transform-origin: center; animation: g-iso-star 15s ease-in-out var(--t0) infinite both; }
+  .g-iso-flash { animation: g-iso-flash 15s linear var(--t0) infinite both; }
+}
+
+@keyframes g-iso-stack {
+  0%, 2% { transform: translateY(var(--d)); animation-timing-function: cubic-bezier(0.3, 0.75, 0.25, 1); }
+  10%, 88% { transform: none; animation-timing-function: cubic-bezier(0.6, 0, 0.3, 1); }
+  97%, 100% { transform: translateY(var(--d)); }
+}
+@keyframes g-iso-float { 0%, 100% { transform: translateY(4px); } 50% { transform: translateY(-4px); } }
+@keyframes g-iso-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes g-iso-tags { 0%, 7% { opacity: 0; } 11%, 87% { opacity: 1; } 90%, 100% { opacity: 0; } }
+/* s: lit 1.1 s, b: 6.1 s, e: 2.3 s */
+@keyframes g-iso-on-s { 0% { opacity: var(--off, 0); } 1.2%, 6.2% { opacity: 1; } 7.4%, 100% { opacity: var(--off, 0); } }
+@keyframes g-iso-on-b { 0% { opacity: var(--off, 0); } 1.2%, 39.6% { opacity: 1; } 40.8%, 100% { opacity: var(--off, 0); } }
+@keyframes g-iso-on-e { 0% { opacity: var(--off, 0); } 1.2%, 14% { opacity: 1; } 15.2%, 100% { opacity: var(--off, 0); } }
+/* The lit layer rises out of the stack while it works. */
+@keyframes g-iso-lift-s { 0%, 8.4%, 100% { transform: none; } 2%, 6.2% { transform: translateY(-10px); } }
+@keyframes g-iso-lift-b { 0%, 41.8%, 100% { transform: none; } 2%, 39.6% { transform: translateY(-10px); } }
+@keyframes g-iso-lift-e { 0%, 16.2%, 100% { transform: none; } 2%, 14% { transform: translateY(-10px); } }
+@keyframes g-iso-step { 0% { opacity: 0; } 0.64%, 3.68% { opacity: 1; } 4.32%, 100% { opacity: 0; } }
+@keyframes g-iso-gold { 0% { opacity: 0; } 0.48%, 15.6% { opacity: 1; } 16.8%, 100% { opacity: 0; } }
+@keyframes g-iso-pulse {
+  /* leaves from the lifted plate (-10px) and takes 0.8 s to reach the next one */
+  0% { opacity: 0; transform: translateY(-10px); }
+  0.64% { opacity: 1; }
+  4.67% { opacity: 1; }
+  5.33% { opacity: 0; transform: translateY(var(--dy)); }
+  100% { opacity: 0; transform: translateY(var(--dy)); }
+}
+@keyframes g-iso-ripple { 0%, 100% { opacity: 0; } 1.6%, 3.2% { opacity: 1; } 5.6%, 6.4% { opacity: 0; } 8%, 9.6% { opacity: 1; } 12% { opacity: 0; } }
+@keyframes g-iso-brow {
+  0%, 28.4%, 33.6%, 44.4%, 52%, 100% { transform: none; }
+  30%, 31.6%, 46%, 49.6% { transform: translateY(-100px); }
+}
+@keyframes g-iso-star {
+  0%, 29.2%, 32.8%, 45.2%, 49.6%, 100% { transform: none; }
+  30.4%, 46.4% { transform: scale(1.22); }
+}
+@keyframes g-iso-flash {
+  0%, 29.2%, 32.8%, 45.2%, 49.6%, 100% { opacity: 0; }
+  30%, 31.6%, 46%, 48% { opacity: 1; }
+}
+
+/* Phone: drop the one-liners, and make the titles big enough to read at this scale. */
+@media (max-width: 560px) {
+  .g-iso-sub { display: none; }
+  .g-iso-title { font-size: 21px; letter-spacing: 0.04em; transform: translateY(7px); }
+}

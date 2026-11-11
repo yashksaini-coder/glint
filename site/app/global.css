@@ -1,6 +1,11 @@
 @import 'tailwindcss';
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
+@import './diagrams.css';
+@import './diagrams-concepts.css';
+@import './diagrams-guides.css';
+@import './diagrams-charts.css';
+@import './hero.css';
 
 /* Glint docs: square hairline surfaces, mono-caps labels, the app's own blue and gold. */
 @theme {
@@ -73,7 +78,7 @@ html > body[data-scroll-locked] { margin-right: 0px !important; --removed-body-s
 body { font-family: var(--font-sans); background: var(--color-fd-background); }
 h1, h2, h3, h4 { font-family: var(--font-heading); }
 
-.g-caps, .g-cell, .g-action, .g-rail-label, .g-tag, .g-iso-label, .g-iso-eyebrow {
+.g-caps, .g-cell, .g-action, .g-rail-label, .g-tag {
   font-family: var(--font-mono);
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -124,18 +129,12 @@ h1, h2, h3, h4 { font-family: var(--font-heading); }
 .g-rule { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; font-size: 1rem; font-weight: 500; }
 .g-rule::after { content: ''; flex: 1; height: 1px; background: var(--color-fd-border); }
 .g-lede { font-size: 1.0625rem; line-height: 1.65; color: var(--color-fd-muted-foreground); }
-.g-hero-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.75rem; }
 .g-btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.625rem 1.25rem; font-size: 0.875rem; font-weight: 500; border: 1px solid var(--color-fd-border); transition: background 0.15s, opacity 0.15s; }
 .g-btn:hover { background: var(--color-fd-accent); }
 .g-btn-solid { background: var(--color-fd-foreground); color: var(--color-fd-background); border-color: var(--color-fd-foreground); }
 .g-btn-solid:hover { background: var(--color-fd-foreground); opacity: 0.88; }
 .g-foot-links { display: flex; gap: 1.25rem; }
 .g-foot-link:hover { color: var(--color-fd-foreground); }
-.g-hero-bg {
-  background-image: linear-gradient(var(--color-fd-border) 1px, transparent 1px), linear-gradient(90deg, var(--color-fd-border) 1px, transparent 1px);
-  background-size: 44px 44px; opacity: 0.35;
-  mask-image: radial-gradient(ellipse at 40% 30%, black, transparent 75%);
-}
 .g-feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); border-top: 1px solid var(--color-fd-border); border-inline-start: 1px solid var(--color-fd-border); }
 .g-feature { display: flex; flex-direction: column; padding: 1.25rem; border-bottom: 1px solid var(--color-fd-border); border-inline-end: 1px solid var(--color-fd-border); transition: background 0.15s; }
 .g-feature:hover { background: var(--color-fd-accent); }
@@ -143,39 +142,3 @@ h1, h2, h3, h4 { font-family: var(--font-heading); }
 .g-start { margin: 0; }
 .g-start-code { padding: 1rem 1.25rem; font-family: var(--font-mono); font-size: 0.875rem; line-height: 1.6; overflow-x: auto; }
 .g-start-note { padding: 0.75rem 1.25rem; border-top: 1px solid var(--color-fd-border); font-size: 0.875rem; color: var(--color-fd-muted-foreground); }
-
-/* isometric board */
-.g-iso { width: 100%; height: 100%; }
-.g-iso polygon { stroke: var(--g-iso-line); stroke-width: 1; stroke-linejoin: round; }
-.g-iso-top { fill: var(--g-iso-top); }
-.g-iso-mid { fill: var(--g-iso-mid); }
-.g-iso-dark { fill: var(--g-iso-dark); }
-.g-iso-key { fill: var(--g-iso-key); font-family: var(--font-mono); font-size: 15px; font-weight: 500; }
-.g-iso-key-on { fill: #2a1d00; font-weight: 700; }
-.g-iso .g-iso-keylit { fill: var(--g-iso-lit); stroke: var(--g-iso-lit); }
-.g-iso .g-iso-rowlit { fill: color-mix(in srgb, var(--g-iso-accent) 22%, transparent); stroke: var(--g-iso-accent); stroke-width: 1.5; }
-.g-iso-arc { fill: none; stroke: var(--g-iso-accent); stroke-width: 9; stroke-linecap: round; }
-.g-iso-breath { fill: none; stroke: var(--g-iso-accent); stroke-width: 1.5; opacity: 0.7; stroke-dasharray: 6 5; animation: g-breath 4s linear infinite; }
-.g-iso-flash { fill: var(--g-iso-lit); }
-.g-iso-dot { fill: var(--g-iso-accent); }
-.g-iso-lead { stroke: var(--g-iso-line); }
-.g-iso-label, .g-iso-eyebrow { fill: var(--color-fd-foreground); font-size: 10.5px; }
-.g-iso-eyebrow { fill: var(--color-fd-muted-foreground); }
-.g-iso-num { fill: var(--g-iso-accent); }
-.g-iso-sub { fill: var(--color-fd-muted-foreground); font-size: 11px; }
-
-/* one step per second over a 12 second loop */
-.g-iso-step { opacity: 0; animation: g-step 12s steps(1, end) infinite; }
-.g-iso-brow { animation: g-brow 12s ease-in-out infinite; animation-delay: 0s; transform-box: fill-box; }
-@keyframes g-step { 0%, 8.3% { opacity: 1; } 8.34%, 100% { opacity: 0; } }
-/* raised on the two select steps: 5 s and 8 s into the loop */
-@keyframes g-brow {
-  0%, 38%, 50%, 62%, 75%, 100% { transform: translateY(0); }
-  43%, 46%, 67%, 71% { transform: translateY(-16px); }
-}
-@keyframes g-breath { to { stroke-dashoffset: -44; } }
-
-@media (prefers-reduced-motion: reduce) {
-  .g-iso-step, .g-iso-brow, .g-iso-breath { animation: none; }
-  .g-iso-still { opacity: 1; }
-}

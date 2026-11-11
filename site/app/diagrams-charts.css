@@ -1,0 +1,16 @@
+/* Recorded-data charts and option sketches (components/diagrams/charts.tsx). */
+.gd-canvas svg text.gc-t { font-size: 13px; }
+.gd-canvas svg text.gc-m { fill: var(--gd-muted); }
+.gd-canvas svg text.gc-on { fill: var(--gd-ink); }
+.gc-trace { fill: none; stroke: var(--gd-blue); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.gc-rule { stroke: var(--gd-line); stroke-width: 1; }
+.gc-rule-strong { stroke: var(--gd-ink); stroke-width: 1.25; stroke-dasharray: 5 4; }
+.gc-chord { stroke: var(--gd-gold); stroke-width: 2; stroke-dasharray: 6 4; }
+.gc-bracket { fill: none; stroke: var(--gd-muted); stroke-width: 1.25; }
+.gc-cue { fill: var(--gd-blue); fill-opacity: 0.14; }
+.gc-talk { fill: var(--gd-gold); fill-opacity: 0.16; }
+.gc-armed { fill: var(--gd-green); fill-opacity: 0.28; }
+.gc-unarmed { fill: var(--gd-surface-2); }
+.gc-fire { fill: var(--gd-green); stroke: var(--color-fd-card); stroke-width: 2; }
+.gc-hollow { fill: var(--color-fd-card); stroke: var(--gd-red); stroke-width: 2; }
+.gc-dot { fill: var(--gd-blue); stroke: var(--color-fd-card); stroke-width: 2; }

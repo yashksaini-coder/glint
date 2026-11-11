@@ -8,6 +8,8 @@ Glint is at version 0.1. This page says plainly what has been checked, so you ca
 
 ## What has and has not been tested
 
+<ScopeFigure />
+
 | Area | Status |
 | --- | --- |
 | Board, scanner, settings | **Tested.** Unit tests, plus an end-to-end test that drives the packaged Linux app on every CI run. |
@@ -15,7 +17,7 @@ Glint is at version 0.1. This page says plainly what has been checked, so you ca
 | SDK signals on a live camera | **Tested in an early prototype**, which is where the recording came from. |
 | The finished app on a real camera | **Not yet run.** Its live path has run only against a simulated camera, up to an authentication failure. |
 | Use by disabled people | **Not tested.** Nobody who needs switch access has tried Glint. |
-| Linux AppImage | **Tested** in replay mode, locally and in CI. |
+| Linux build | **Tested** in replay mode. CI smoke-tests the unpacked build; the AppImage itself has been run locally only. |
 | Windows installer | **Builds in CI. Never installed or run** on a Windows machine. |
 | macOS | **No build.** The SDK supports Apple Silicon, but Glint has no macOS packaging. |
 | Calibration | **Not built.** Thresholds are the same for everyone. |
