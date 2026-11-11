@@ -23,15 +23,20 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
 
   return (
     <DocsPage toc={page.data.toc} full={page.data.full}>
-      <DocsTitle>{page.data.title}</DocsTitle>
-      <DocsDescription className="mb-0">{page.data.description}</DocsDescription>
-      <div className="flex flex-row gap-2 items-center border-b pb-6">
-        <MarkdownCopyButton markdownUrl={markdownUrl} />
-        <ViewOptionsPopover
-          markdownUrl={markdownUrl}
-          githubUrl={`https://github.com/${gitConfig.user}/${gitConfig.repo}/blob/${gitConfig.branch}/site/content/docs/${encodeURI(page.path)}`}
-        />
+      <div className="flex flex-wrap items-start justify-between gap-x-6 gap-y-2">
+        <DocsTitle>{page.data.title}</DocsTitle>
+        <div className="g-actions">
+          <MarkdownCopyButton markdownUrl={markdownUrl} className="g-action">Copy MD</MarkdownCopyButton>
+          <ViewOptionsPopover
+            markdownUrl={markdownUrl}
+            githubUrl={`https://github.com/${gitConfig.user}/${gitConfig.repo}/blob/${gitConfig.branch}/site/content/docs/${encodeURI(page.path)}`}
+            className="g-action"
+          >
+            Open in
+          </ViewOptionsPopover>
+        </div>
       </div>
+      <DocsDescription className="mb-0">{page.data.description}</DocsDescription>
       <DocsBody>
         <MDX
           components={getMDXComponents({

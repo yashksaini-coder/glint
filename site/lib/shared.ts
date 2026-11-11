@@ -11,6 +11,11 @@ export const gitConfig = {
   branch: 'main',
 };
 
+export const links = {
+  repo: `https://github.com/${gitConfig.user}/${gitConfig.repo}`,
+  releases: `https://github.com/${gitConfig.user}/${gitConfig.repo}/releases/latest`,
+};
+
 const getContentUrl = createGetUrl(docsContentRoute);
 
 export function getPageMarkdownUrl(page: { slugs: string[]; locale?: string }) {

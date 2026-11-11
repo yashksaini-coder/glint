@@ -1,11 +1,12 @@
 import { RootProvider } from 'fumadocs-ui/provider/next';
 import './global.css';
-import { Inter } from 'next/font/google';
+import { DM_Sans, Geist_Mono, Inter, Newsreader } from 'next/font/google';
 import type { Metadata } from 'next';
 
-const inter = Inter({
-  subsets: ['latin'],
-});
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
+const dmSans = DM_Sans({ subsets: ['latin'], variable: '--font-dm-sans' });
+const geistMono = Geist_Mono({ subsets: ['latin'], variable: '--font-geist-mono' });
+const newsreader = Newsreader({ subsets: ['latin'], style: 'italic', variable: '--font-newsreader' });
 
 export const metadata: Metadata = {
   title: { default: 'Glint Docs', template: '%s | Glint Docs' },
@@ -15,9 +16,9 @@ export const metadata: Metadata = {
 
 export default function Layout({ children }: LayoutProps<'/'>) {
   return (
-    <html lang="en" className={inter.className} suppressHydrationWarning>
-      <body className="flex flex-col min-h-screen">
-        <RootProvider>{children}</RootProvider>
+    <html lang="en" className={`${inter.variable} ${dmSans.variable} ${geistMono.variable} ${newsreader.variable}`} suppressHydrationWarning>
+      <body className="flex min-h-screen flex-col">
+        <RootProvider theme={{ defaultTheme: 'dark' }}>{children}</RootProvider>
       </body>
     </html>
   );
