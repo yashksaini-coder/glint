@@ -62,7 +62,12 @@ export async function generateMetadata(props: PageProps<'/docs/[[...slug]]'>): P
     title: page.data.title,
     description: page.data.description,
     openGraph: {
+      type: 'article',
+      siteName: 'Glint',
+      title: page.data.title,
+      description: page.data.description,
       images: getPageImageUrl(page).url,
     },
+    twitter: { card: 'summary_large_image', images: getPageImageUrl(page).url },
   };
 }

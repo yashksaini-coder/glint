@@ -120,3 +120,26 @@
   .g-iso-sub { display: none; }
   .g-iso-title { font-size: 21px; letter-spacing: 0.04em; transform: translateY(7px); }
 }
+
+/* Share cards (app/og-card). Fixed pixel sizes: they are captured as images, not read on screens. */
+.og-sheet { display: flex; flex-direction: column; gap: 40px; padding: 40px; background: #05060a; }
+.og-card {
+  position: relative; display: grid; grid-template-columns: 55% 45%; overflow: hidden;
+  background: radial-gradient(ellipse at 78% 40%, #7fd1ff1f, transparent 60%), #0f1117; color: #e9ebf0;
+  border: 1px solid #ffffff17;
+}
+.og-grid {
+  position: absolute; inset: 0; opacity: 0.35;
+  background-image: linear-gradient(#ffffff12 1px, transparent 1px), linear-gradient(90deg, #ffffff12 1px, transparent 1px);
+  background-size: 48px 48px; mask-image: radial-gradient(ellipse at 70% 45%, black, transparent 72%);
+}
+.og-copy { position: relative; display: flex; flex-direction: column; padding: 64px 0 56px 72px; }
+.og-brand { display: flex; align-items: center; gap: 16px; font-family: var(--font-mono); font-size: 26px; letter-spacing: 0.16em; text-transform: uppercase; }
+.og-card h1 { margin-top: auto; font-family: var(--font-heading); font-size: 64px; line-height: 1.06; font-weight: 500; letter-spacing: -0.02em; }
+.og-card h1 em { font-family: var(--font-newsreader), Georgia, serif; font-style: italic; font-weight: 400; color: #7fd1ff; }
+.og-card p { margin-top: 22px; font-size: 25px; line-height: 1.4; color: #9aa1b2; max-width: 30ch; }
+.og-foot { display: flex; align-items: center; gap: 18px; margin-top: 36px; }
+.og-chip { white-space: nowrap; padding: 6px 12px; border: 1px solid #ffffff2e; font-family: var(--font-mono); font-size: 15px; letter-spacing: 0.08em; text-transform: uppercase; color: #cfd4df; }
+.og-url { white-space: nowrap; font-family: var(--font-mono); font-size: 18px; color: #ffd166; }
+.og-art { position: relative; padding: 36px 40px 36px 0; display: flex; align-items: center; }
+.og-art .g-iso { height: 100%; }

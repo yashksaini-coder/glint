@@ -108,6 +108,7 @@ npm test                     # detectors on the recorded fixture, scanner, setti
 npm run smoke                # launches the app, replays, types + speaks via simulated switch presses
 node tools/screenshots.ts    # regenerates the app screenshots in docs/img/ (replay mode: no camera, no face)
 npm run diagram              # regenerates docs/img/architecture.png from tools/diagram/make.mjs
+cd site && npm run og        # regenerates the share images (site/public/og.png, docs/img/social-preview.png)
 node tools/sweep.ts          # grid-searches detector thresholds against the recorded cues
 ```
 

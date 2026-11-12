@@ -14,6 +14,16 @@ export const metadata: Metadata = {
   description: 'Documentation for Glint: type and speak with your eyebrows and your breath, through a webcam.',
   icons: { icon: `${basePath}/icon.svg` },
   metadataBase: new URL('https://yashksaini-coder.github.io'),
+  // The base path is not added to metadata URLs, so the image path carries it.
+  openGraph: {
+    type: 'website',
+    siteName: 'Glint',
+    title: 'Glint: type and speak with your eyebrows and your breath',
+    description: 'A webcam switch-access keyboard. Runs on your computer. Open source.',
+    url: `${basePath}/`,
+    images: [{ url: `${basePath}/og.png`, width: 1200, height: 630, alt: 'Glint: type and speak with your eyebrows and your breath.' }],
+  },
+  twitter: { card: 'summary_large_image', images: [`${basePath}/og.png`] },
 };
 
 export default function Layout({ children }: LayoutProps<'/'>) {
