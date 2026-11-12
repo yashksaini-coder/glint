@@ -14,9 +14,13 @@ Glint works around it by owning the `MediaStream`: it sets the camera to automat
 
 <ExposureLock />
 
+Reported upstream as [SmartSpectra#19](https://github.com/Presage-Security/SmartSpectra/issues/19).
+
 ## Temporary model errors
 
 On first use, a session failed when Presage's server answered `503 Model not available` for `phasic-bp-inference` and `expressions-inference`. A retry a few minutes later worked. Glint requests only `PULSE_RATE` rather than the whole cardio bundle, which removes the blood-pressure model from that failure path.
+
+The same error is tracked in [SmartSpectra#18](https://github.com/Presage-Security/SmartSpectra/issues/18), where we added our data.
 
 ## Things the documentation does not make obvious
 
