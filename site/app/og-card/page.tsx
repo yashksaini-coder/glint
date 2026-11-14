@@ -6,9 +6,9 @@ import { StackScene } from '@/components/home/stack-scene';
 
 export const metadata: Metadata = { title: 'Share card', robots: { index: false, follow: false } };
 
-function Card({ id, w, h, url }: { id: string; w: number; h: number; url: string }) {
+function Card({ id, w, h, url, compact }: { id: string; w: number; h: number; url: string; compact?: boolean }) {
   return (
-    <section id={id} className="og-card dark" style={{ width: w, height: h }}>
+    <section id={id} className="og-card dark" data-compact={compact || undefined} style={{ width: w, height: h }}>
       <div className="og-grid" aria-hidden />
       <div className="og-copy">
         <div className="og-brand">
@@ -36,6 +36,7 @@ export default function ShareCard() {
     <main className="og-sheet">
       <Card id="docs" w={1200} h={630} url="yashksaini-coder.github.io/glint" />
       <Card id="repo" w={1280} h={640} url="github.com/yashksaini-coder/glint" />
+      <Card id="cover" w={1000} h={420} url="yashksaini-coder.github.io/glint" compact />
     </main>
   );
 }

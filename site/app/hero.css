@@ -143,3 +143,14 @@
 .og-url { white-space: nowrap; font-family: var(--font-mono); font-size: 18px; color: #ffd166; }
 .og-art { position: relative; padding: 36px 40px 36px 0; display: flex; align-items: center; }
 .og-art .g-iso { height: 100%; }
+/* DEV cover (1000x420): smaller type, no description line. */
+.og-card[data-compact] .og-copy { padding: 36px 0 44px 52px; }
+.og-card[data-compact] .og-brand { font-size: 20px; }
+.og-card[data-compact] .og-brand svg { width: 40px; height: 40px; }
+.og-card[data-compact] h1 { font-size: 40px; line-height: 1.1; }
+.og-card[data-compact] p { display: none; }
+.og-card[data-compact] .og-foot { margin-top: 22px; }
+.og-card[data-compact] .og-art { padding: 18px 28px 18px 0; }
+.og-card[data-compact] .og-chip { display: none; }
+.og-card[data-compact] .og-url { font-size: 16px; }
+.og-card[data-compact] .og-copy { height: 420px; }

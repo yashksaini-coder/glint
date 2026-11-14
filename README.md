@@ -19,6 +19,8 @@ A webcam switch-access keyboard for people who can't reliably use their hands or
 
 ## How you use it
 
+![Replay mode: rows light up in turn, a row is chosen, then H, then I, and "hi" appears](docs/img/board.gif)
+
 A highlight steps through the board on its own. You need two gestures:
 
 | Gesture | Does | Read from |

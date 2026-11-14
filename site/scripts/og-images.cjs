@@ -1,6 +1,7 @@
 // Renders the share images from the built site (run `npm run build` first, without NEXT_PUBLIC_BASE_PATH).
 //   npm run og      (uses the app's Electron: the repo root has it)
-// Writes public/og.png (1200x630, docs) and ../docs/img/social-preview.png (1280x640, GitHub repo preview).
+// Writes public/og.png (1200x630, docs), ../docs/img/social-preview.png (1280x640, GitHub repo preview)
+// and ../docs/img/dev-cover.png (1000x420, the DEV post cover).
 // Reduced motion is forced, so the hero stack is its complete still frame.
 const { app, BrowserWindow } = require('electron');
 const { createServer } = require('node:http');
@@ -26,7 +27,7 @@ app.whenReady().then(async () => {
     const win = new BrowserWindow({ show: false, width: 1400, height: 900, useContentSize: true, webPreferences: { backgroundThrottling: false, offscreen: true } });
     await win.loadURL(`http://localhost:${port}/og-card`);
     await win.webContents.executeJavaScript('document.fonts.ready.then(() => new Promise((r) => setTimeout(r, 800)))');
-    const targets = { docs: path.join(__dirname, '..', 'public', 'og.png'), repo: path.join(__dirname, '..', '..', 'docs', 'img', 'social-preview.png') };
+    const targets = { docs: path.join(__dirname, '..', 'public', 'og.png'), repo: path.join(__dirname, '..', '..', 'docs', 'img', 'social-preview.png'), cover: path.join(__dirname, '..', '..', 'docs', 'img', 'dev-cover.png') };
     for (const [id, file] of Object.entries(targets)) {
       // The window is clamped to the screen, so bring each card into view before measuring it.
       const rect = await win.webContents.executeJavaScript(`(() => { const el = document.getElementById('${id}'); el.scrollIntoView({ block: 'start' }); const r = el.getBoundingClientRect(); return { x: Math.round(r.x), y: Math.round(r.y), width: Math.round(r.width), height: Math.round(r.height) }; })()`);
