@@ -11,5 +11,7 @@ Stored as `settings.json` in the app's data folder (`~/.config/Glint/` on Linux,
 | `dwellMs` | number | `1000` | Clamped to 500–3000. |
 | `telemetry` | boolean | `false` | Only a literal `true` enables it. |
 | `phrases` | string[] | Six defaults | Up to 6, each trimmed to 40 characters. An empty list removes the row. |
+| `sendTarget` | string | `"none"` | `"none"`, `"whatsapp"`, `"telegram"` or `"email"`. Anything else becomes `"none"`. |
+| `sendTo` | string | `""` | The recipient. WhatsApp: spaces, `+`, `-`, `(`, `)` and `.` are removed, and the rest must be 1 to 15 digits. Email: one address of up to 254 characters: letters, digits and `._+-` before the @, and a domain with at least one dot (letters, digits and `-`). Telegram and None: always `""`. Anything that does not fit becomes `""`. |
 
-The main process runs every read and write through `sanitize()` in `src/shared/settings.ts`, so a damaged file falls back to safe values.
+The main process runs every read and write through `sanitize()` in `src/shared/settings.ts`, so a damaged file falls back to safe values. When sending, the main process reads the target and recipient from this file, not from the window, and checks the recipient again.

@@ -1,0 +1,60 @@
+---
+icon: Send
+title: Sending a message
+description: Open WhatsApp, Telegram or your mail app with the typed text filled in.
+---
+
+Glint can hand your text to WhatsApp, Telegram or your mail app. It opens a link with the message already filled in. **You still press Send in that app.** Glint cannot press it for you.
+
+<Callout type="warn">
+Sending has been tested only with unit tests and the replay-mode smoke test, which checks the link without opening it. No real message has been sent through Glint yet.
+</Callout>
+
+## Set it up
+
+<Steps>
+  <Step>
+    ### Choose a target
+
+    Open **Settings** on the first screen and pick WhatsApp, Telegram or Email under **Send to**. The default is None, which means no Send key.
+  </Step>
+  <Step>
+    ### Add a recipient (optional)
+
+    For WhatsApp and Email you can enter who it goes to. Leave it empty to choose the chat or address in that app each time. Telegram has no recipient field.
+  </Step>
+  <Step>
+    ### Save
+
+    Press **Save settings**. The board now has a Send key, such as `WhatsApp ↗`, at the end of the last letter row, just before `↩`.
+  </Step>
+</Steps>
+
+## Send
+
+Type your message, then select the Send key like any other key: its row first, then the key.
+
+Glint asks your computer to open the link, in your web browser or your mail app. A notice appears: *Opened WhatsApp with your message. Press Send there.* Check the message and press Send in that app.
+
+- Your text stays on the board. Glint does not speak it or copy it. Breathe out slowly afterwards if you also want it spoken.
+- With no text typed, the Send key does nothing.
+- Up to 1000 characters are sent. Anything longer is cut off.
+- If the link could not be opened, the notice starts with *Could not send:* and gives the reason.
+
+## Each target
+
+| Target | Link | Recipient |
+| --- | --- | --- |
+| WhatsApp | `https://wa.me/<number>?text=…` | A phone number with the country code, such as `44 7700 900123`. Spaces, `+`, `-`, brackets and dots are removed. It must then be 1 to 15 digits, or it is cleared. |
+| Telegram | `https://t.me/share/url?url=…&text=…` | None. You choose the chat in Telegram. The message also carries a link to these docs, because Telegram's share link expects a link to share. |
+| Email | `mailto:<address>?body=…` | One plain email address, up to 254 characters. Anything else, such as two addresses, is cleared. The text goes in the body, with no subject. |
+
+The recipient is checked when you save, and again when the link is built. Glint only opens links that start with `https://wa.me/`, `https://t.me/share/url?` or `mailto:`.
+
+## Privacy
+
+The target and recipient are saved in the [settings file](/docs/reference/settings-file). Your message is not saved. It leaves this computer only when you select the Send key, through the app you picked. For WhatsApp and Telegram the text is part of the link, so it reaches their servers as soon as the link opens in your browser, before you press Send. For Email it stays in your mail app until you press Send. See [Privacy and consent](/docs/privacy#what-leaves-your-computer).
+
+## The limit
+
+Pressing Send in WhatsApp, Telegram or the mail app needs a click, a tap or another way to control that app. Someone who can only use Glint's two gestures will need help for that last step.

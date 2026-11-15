@@ -9,9 +9,16 @@ import { liveSource } from './signals/presage.ts';
 import { replaySource } from './signals/replay.ts';
 import type { SignalSource } from './signals/source.ts';
 import { DEFAULT_SETTINGS, type Settings } from '../shared/settings.ts';
+import { SEND_NAMES } from '../shared/send.ts';
 
 let settings: Settings = DEFAULT_SETTINGS;
-const boardRows = () => (settings.phrases.length ? [settings.phrases, ...LETTERS] : LETTERS);
+// The Send key, when a target is set, goes at the end of the last letters row (J X Q Z . ?).
+const sendKey = () => (settings.sendTarget === 'none' ? null : `${SEND_NAMES[settings.sendTarget]} ↗`);
+const boardRows = () => {
+  const send = sendKey();
+  const letters = send ? [...LETTERS.slice(0, -1), [...LETTERS.at(-1)!, send]] : LETTERS;
+  return settings.phrases.length ? [settings.phrases, ...letters] : letters;
+};
 const PHRASE_ROW = 0; // only when settings.phrases is non-empty
 
 const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
@@ -138,6 +145,7 @@ function select() {
   const { mode, row } = scanner.state();
   const key = scanner.select(performance.now());
   if (key && mode === 'cols' && row === PHRASE_ROW && settings.phrases.length) void say(key); // phrases speak at once
+  else if (key && key === sendKey() && row === boardRows().length - 1) void send();
   else if (key) text = applyKey(text, key);
   renderBoard(); schedule(); // any gesture restarts the dwell timer
 }
@@ -147,6 +155,13 @@ async function commit() {
   if (!t) return; // guard: a stray exhale with nothing composed does nothing
   text = ''; renderBoard();
   await say(t);
+}
+
+async function send() {
+  const t = text.trim();
+  if (!t) return; // same guard as commit
+  const r = await window.glint.send(t); // text is kept: the user may still want to speak it
+  toast(r.ok ? `Opened ${SEND_NAMES[settings.sendTarget as keyof typeof SEND_NAMES]} with your message. Press Send there.` : `Could not send: ${r.reason}`);
 }
 
 async function say(t: string) {
@@ -171,7 +186,7 @@ function buildGrid() {
     el.style.gridTemplateColumns = `repeat(${row.length + 1}, 1fr)`;
     el.append(...[...row, BACK].map((k, c) => {
       const key = document.createElement('div');
-      key.className = 'key' + (k === BACK ? ' back' : '');
+      key.className = 'key' + (k === BACK ? ' back' : '') + (r === boardRows().length - 1 && k === sendKey() ? ' send' : '');
       key.dataset.c = String(c);
       key.textContent = k;
       return key;
@@ -228,13 +243,25 @@ function showSettings(s: Settings) {
   $('dwell-label').textContent = `${(s.dwellMs / 1000).toFixed(1)} s`;
   $<HTMLTextAreaElement>('phrases').value = s.phrases.join('\n');
   $<HTMLInputElement>('telemetry').checked = s.telemetry;
+  $<HTMLSelectElement>('send-target').value = s.sendTarget;
+  $<HTMLInputElement>('send-to').value = s.sendTo;
+  showRecipient();
 }
+// Telegram share links cannot preset a chat, so the recipient field only shows for WhatsApp and email.
+function showRecipient() {
+  const t = $<HTMLSelectElement>('send-target').value;
+  $('send-to-label').hidden = t !== 'whatsapp' && t !== 'email';
+  $<HTMLInputElement>('send-to').placeholder = t === 'email' ? 'name@example.com' : 'Phone with country code, e.g. 44 7700 900123';
+}
+$('send-target').onchange = showRecipient;
 $('dwell').oninput = () => { $('dwell-label').textContent = `${(Number($<HTMLInputElement>('dwell').value) / 1000).toFixed(1)} s`; };
 $('settings-save').onclick = async () => {
   showSettings(await window.glint.settings.set({
     dwellMs: Number($<HTMLInputElement>('dwell').value),
     phrases: $<HTMLTextAreaElement>('phrases').value.split('\n'),
     telemetry: $<HTMLInputElement>('telemetry').checked,
+    sendTarget: $<HTMLSelectElement>('send-target').value,
+    sendTo: $<HTMLInputElement>('send-to').value,
   }));
   $('settings-status').textContent = 'Saved.';
 };
@@ -249,9 +276,10 @@ $('go-live').onclick = () => start('live');
 $('go-replay').onclick = () => start('replay');
 $('setup-stop').onclick = $('board-stop').onclick = () => stop();
 addEventListener('keydown', (e) => {
+  if (phase === 'consent') return;
+  if (e.key === 'Escape') { void stop(); return; }            // setup too: the camera is already on there
   if (phase !== 'board') return;
   if (e.key === ' ') { e.preventDefault(); select(); }       // a physical switch usually sends Space
   else if (e.key === 'Enter') { e.preventDefault(); void commit(); }
-  else if (e.key === 'Escape') void stop();
 });
 addEventListener('beforeunload', () => { void source?.stop(); });

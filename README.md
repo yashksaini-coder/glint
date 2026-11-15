@@ -31,6 +31,7 @@ A highlight steps through the board on its own. You need two gestures:
 - **Back and delete are keys:** `↩` ends every row and `⌫` is on the first letter row.
 - **Letters are in frequency order** (space, E, T, A, O first), so the common ones take the fewest steps.
 - **Quick phrases** on the top row ("Yes", "I need water", "I need help" …) are spoken as soon as you select them.
+- **Send to chat (optional):** set WhatsApp, Telegram or Email in Settings and a Send key appears on the last letter row. It opens that app with your text filled in; you still press Send there.
 - **A keyboard or physical switch works too:** `Space` select · `Enter` speak · `Esc` stop.
 
 ## Screens
@@ -38,11 +39,11 @@ A highlight steps through the board on its own. You need two gestures:
 <table>
 <tr>
 <td width="50%"><img src="docs/img/consent.png" alt="Consent screen: what is read, what is stored, telemetry off; Start camera or Try a recorded session"></td>
-<td width="50%"><img src="docs/img/settings.png" alt="Settings: scan speed, quick phrases, SDK telemetry checkbox (off), Save and Forget everything"></td>
+<td width="50%"><img src="docs/img/settings.png" alt="Settings: scan speed, quick phrases, Send to (None), SDK telemetry checkbox (off), Save and Forget everything"></td>
 </tr>
 <tr>
 <td><b>Consent first.</b> The camera can only be started from here, after the user has read what is read and what is kept.</td>
-<td><b>Settings</b>, for the user or a carer: scan speed, the six quick phrases, SDK telemetry (off by default), and <i>Forget everything</i>.</td>
+<td><b>Settings</b>, for the user or a carer: scan speed, the six quick phrases, an optional Send target, SDK telemetry (off by default), and <i>Forget everything</i>.</td>
 </tr>
 </table>
 
@@ -66,7 +67,8 @@ The detectors are small pure functions (`src/renderer/gestures/`), tuned and tes
 
 - The camera starts only from the consent screen and is released on Stop, Esc, any error that ends the session, or closing the app.
 - Video is processed on the device by the SDK. Glint never writes it to disk or sends it anywhere.
-- Nothing you type or say is stored. Spoken text goes to the clipboard and nowhere else.
+- Nothing you type or say is stored. Spoken text goes to the clipboard.
+- Text leaves the computer only if you set **Send to** in Settings and select the Send key. Glint then opens WhatsApp, Telegram or your mail app with the text filled in, and you still press Send there. The recipient is kept in `settings.json`.
 - The only stored file is `settings.json` in the app's user-data folder. **Forget everything** deletes it.
 - SDK telemetry (session summaries and readiness reports; no frames, no vitals, but not anonymous: it can be linked to your Presage account) is **off** unless you turn it on. See [Presage telemetry & privacy](https://smartspectra.presagetech.com/docs/telemetry-and-privacy).
 - No LLM Insights, no AI service, no analytics, no accounts.
@@ -115,17 +117,17 @@ node tools/sweep.ts          # grid-searches detector thresholds against the rec
 ```
 
 ```
-src/main/        Electron main: SDK IPC, camera permission, settings file, clipboard, espeak fallback
+src/main/        Electron main: SDK IPC, camera permission, settings file, clipboard, espeak fallback, send links
 src/preload/     bridge (SDK preload + a small window.glint API)
 src/renderer/    app.ts (consent → setup → board), gestures/, board/, signals/ (live + replay)
-src/shared/      settings schema + sanitizer (used on both sides)
+src/shared/      settings schema + sanitizer, send link builder (used on both sides)
 recordings/      guided.jsonl test fixture
 tools/           analysis, tuning, smoke test, screenshots
 ```
 
 ## Status
 
-Entry for the DEV × Presage SmartSpectra challenge (Nov 2026). Done: consent flow, scanning board, quick phrases, settings, both detectors, replay mode, Linux/Windows builds. Next: per-user calibration, demo video.
+Entry for the DEV × Presage SmartSpectra challenge (Nov 2026). Done: consent flow, scanning board, quick phrases, settings, send to chat (WhatsApp, Telegram, email; you still press Send), both detectors, replay mode, Linux/Windows builds. Next: per-user calibration, demo video.
 
 ## License
 

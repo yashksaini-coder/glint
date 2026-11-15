@@ -22,13 +22,18 @@ Glint reads only the person in front of the screen. If the SDK reports more than
 | Video | Processed in memory by the SDK. Glint never writes it to disk or sends it anywhere. Presage states that all metric computation runs on the device. |
 | Signals (landmarks, breathing, pulse) | Held in memory for the session, for the detectors and the on-screen traces. Not saved. |
 | What you type or say | Not saved. Spoken text is copied to your clipboard, where other apps can read it, as with anything you copy. |
-| Settings | Saved in `settings.json` in the app's data folder: scan speed, phrases and your telemetry choice. **Forget everything** deletes it. |
+| Text you send | Only when you select the Send key. See [below](#sending-a-message). |
+| Settings | Saved in `settings.json` in the app's data folder: scan speed, phrases, your telemetry choice, and the Send target and recipient (a phone number or email address) if you set one. **Forget everything** deletes it. |
 
 Your quick phrases are saved in that settings file. Avoid putting anything private in them.
 
 ## What leaves your computer
 
 The SDK contacts Presage's servers to check your API key and subscription, and to download its models. Glint itself makes no other network requests. It has no analytics, no account and no AI service, and it does not use the SDK's LLM Insights feature.
+
+### Sending a message
+
+If you set **Send to** in Settings and select the Send key, Glint asks your computer to open a link in your web browser or mail app, with your text in it. For WhatsApp and Telegram the link opens in your web browser, and your text is part of the link, so it reaches WhatsApp's or Telegram's servers (`wa.me`, `t.me`) as soon as the link opens, even if you never press Send. For Email, the text stays in your mail app until you press Send there. After that, their privacy terms apply. Glint itself makes no network request for this. With Send to left at None, which is the default, there is no Send key. Telegram messages also carry a link to these docs. See [Sending a message](/docs/use/sending).
 
 ## SDK telemetry
 

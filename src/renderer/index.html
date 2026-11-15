@@ -28,6 +28,7 @@
     #settings summary { cursor: pointer; font-weight: 600; }
     #settings label { display: block; margin: 12px 0; }
     #settings input[type=range] { width: 320px; }
+    #settings select, #settings input[type=text] { font: inherit; background: var(--bg); color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; }
     #settings textarea { font: inherit; background: var(--bg); color: var(--text); border: 1px solid var(--line); border-radius: 8px; padding: 8px; }
 
     /* setup */
@@ -46,7 +47,7 @@
     .krow.on { border-color: var(--accent); background: #7fd1ff14; }
     .key { font-size: 30px; font-weight: 600; text-align: center; padding: 14px 0; border-radius: 10px; background: var(--panel); border: 1px solid var(--line); }
     .key.back { font-size: 24px; color: var(--muted); }
-    .krow.phrases .key { font-size: 18px; padding: 18px 4px; }
+    .krow.phrases .key, .key.send { font-size: 18px; padding: 18px 4px; }
     .key.on { background: var(--hot); color: #2a1d00; border-color: var(--hot); }
     #paused { position: fixed; inset: auto 0 0 0; padding: 14px; text-align: center; background: #3a1d17; color: var(--warn); font-weight: 600; }
     #toast { position: fixed; top: 18px; left: 50%; transform: translateX(-50%); background: var(--ok); color: #05301b; padding: 10px 18px; border-radius: 10px; font-weight: 600; }
@@ -71,7 +72,7 @@
       <li>Only the person in front of this screen is read. If more than one face is visible, Glint pauses.</li>
       <li>The camera starts only when you press <em>Start camera</em>. It stops when you press <em>Stop</em>, close the app, or an error ends the session.</li>
       <li>Video is processed on this device by the SDK. Glint never saves it or sends it anywhere.</li>
-      <li>Nothing you type or say is stored. Spoken text is copied to the clipboard; that is the only place it goes.</li>
+      <li>Nothing you type or say is stored. Spoken text is copied to the clipboard. Text leaves this computer only if you set up <em>Send to</em> in Settings and choose the Send key: then it goes to the app you picked (WhatsApp, Telegram or email), and you still press Send there.</li>
       <li>SDK telemetry is <strong>off</strong>. Glint uses no AI service, no analytics and no account.</li>
       <li>Pulse is displayed only, so you can see you are being read. Glint is not a medical device and makes no health judgements.</li>
     </ul>
@@ -87,6 +88,16 @@
         <input id="dwell" type="range" min="500" max="3000" step="100"></label>
       <label>Quick phrases (one per line, up to 6, shown as the top row; selecting one speaks it at once)<br>
         <textarea id="phrases" rows="6" cols="40"></textarea></label>
+      <label>Send to (adds a Send key to the board's last letter row)<br>
+        <select id="send-target">
+          <option value="none">None</option>
+          <option value="whatsapp">WhatsApp</option>
+          <option value="telegram">Telegram</option>
+          <option value="email">Email</option>
+        </select></label>
+      <label id="send-to-label">Recipient (optional)<br>
+        <input id="send-to" type="text" size="32" autocomplete="off" spellcheck="false"></label>
+      <p class="muted">Glint opens the app with your message filled in. You still press Send there. With no recipient, you pick the chat or address in that app.</p>
       <label class="row"><input id="telemetry" type="checkbox"> Send SmartSpectra SDK telemetry: session summaries and readiness reports, with no video and no vitals. It is not anonymous and can be linked to your Presage account. Off by default. Details: smartspectra.presagetech.com/docs/telemetry-and-privacy</label>
       <div class="row">
         <button id="settings-save">Save settings</button>

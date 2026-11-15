@@ -12,7 +12,7 @@ Glint is an Electron app in plain TypeScript. Everything runs on the user's comp
 
 | Part | Path | Job |
 | --- | --- | --- |
-| Main | `src/main/` | Runs the SDK's native side. Owns camera permission, the settings file, the clipboard and the `espeak-ng` fallback. |
+| Main | `src/main/` | Runs the SDK's native side. Owns camera permission, the settings file, the clipboard, the `espeak-ng` fallback, and opening Send links with `shell.openExternal`. |
 | Preload | `src/preload/` | The bridge: the SDK's own preload, plus a small `window.glint` API. |
 | Renderer | `src/renderer/` | The app itself: screens, gestures, board and signal sources. Sandboxed, with no file access. |
 
