@@ -132,7 +132,7 @@ tools/           analysis, tuning, smoke test, screenshots
 
 ## Status
 
-Entry for the DEV × Presage SmartSpectra challenge (Nov 2026). Done: consent flow, scanning board, quick phrases, settings, send to chat (WhatsApp, Telegram, email; you still press Send), both detectors, replay mode, Linux/Windows builds. Next: per-user calibration, demo video.
+Entry for the DEV × Presage SmartSpectra challenge (Nov 2026). Done: consent flow, scanning board, quick phrases, settings, send to chat (WhatsApp, Telegram, email; you still press Send), both detectors, replay mode, Linux/Windows builds. Demo video: [YouTube](https://youtu.be/nlU4XPKDkNo). Next: per-user calibration.
 
 ## License
 
