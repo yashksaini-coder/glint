@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="build/icon.svg" width="112" alt="Glint icon: a raised eyebrow over a glint">
+  <img src="https://raw.githubusercontent.com/yashksaini-coder/glint/main/build/icon.png" width="112" alt="Glint icon: a raised eyebrow over a glint">
 </p>
 
 <h1 align="center">Glint</h1>
@@ -18,13 +18,13 @@ A webcam switch-access keyboard for people who can't reliably use their hands or
 
 ## Watch the demo
 
-[![Glint demo: "I need water" selected with a raised eyebrow and spoken aloud, live on a real webcam. Click to play the 88-second video.](site/public/media/glint-demo-poster.jpg)](https://youtu.be/nlU4XPKDkNo)
+[![Glint demo: "I need water" selected with a raised eyebrow and spoken aloud, live on a real webcam. Click to play the 88-second video.](https://raw.githubusercontent.com/yashksaini-coder/glint/main/site/public/media/glint-demo-poster.jpg)](https://youtu.be/nlU4XPKDkNo)
 
 **[▶ Watch on YouTube](https://youtu.be/nlU4XPKDkNo)** · [play the file directly](https://yashksaini-coder.github.io/glint/media/glint-demo.mp4): live on a real webcam, eyebrow raises select phrases ("I need water", "I need help", "Thank you") and Glint speaks them aloud, then letters are typed one raise at a time (shown at 2× speed). Breath-to-speak is shown as a diagram: it has been tested on a recorded session, and did not fire in this live take. The music is an original chiptune generated in code.
 
 ## How you use it
 
-![Replay mode: rows light up in turn, a row is chosen, then H, then I, and "hi" appears](docs/img/board.gif)
+![Replay mode: rows light up in turn, a row is chosen, then H, then I, and "hi" appears](https://raw.githubusercontent.com/yashksaini-coder/glint/main/docs/img/board.gif)
 
 A highlight steps through the board on its own. You need two gestures:
 
@@ -43,8 +43,8 @@ A highlight steps through the board on its own. You need two gestures:
 
 <table>
 <tr>
-<td width="50%"><img src="docs/img/consent.png" alt="Consent screen: what is read, what is stored, telemetry off; Start camera or Try a recorded session"></td>
-<td width="50%"><img src="docs/img/settings.png" alt="Settings: scan speed, quick phrases, Send to (None), SDK telemetry checkbox (off), Save and Forget everything"></td>
+<td width="50%"><img src="https://raw.githubusercontent.com/yashksaini-coder/glint/main/docs/img/consent.png" alt="Consent screen: what is read, what is stored, telemetry off; Start camera or Try a recorded session"></td>
+<td width="50%"><img src="https://raw.githubusercontent.com/yashksaini-coder/glint/main/docs/img/settings.png" alt="Settings: scan speed, quick phrases, Send to (None), SDK telemetry checkbox (off), Save and Forget everything"></td>
 </tr>
 <tr>
 <td><b>Consent first.</b> The camera can only be started from here, after the user has read what is read and what is kept.</td>
@@ -54,7 +54,7 @@ A highlight steps through the board on its own. You need two gestures:
 
 ## How it works
 
-![How Glint works: webcam frames go to the SmartSpectra SDK on this device; landmarks drive the eyebrow-raise detector (select), validation pauses scanning with the SDK hint, pulse rate is display only, the breathing trace plus talking drive the slow-exhale detector (commit); the scanner and commit lead to speak + copy. Nothing is stored except settings.json, no network except the SDK session, telemetry off by default.](docs/img/architecture.png)
+![How Glint works: webcam frames go to the SmartSpectra SDK on this device; landmarks drive the eyebrow-raise detector (select), validation pauses scanning with the SDK hint, pulse rate is display only, the breathing trace plus talking drive the slow-exhale detector (commit); the scanner and commit lead to speak + copy. Nothing is stored except settings.json, no network except the SDK session, telemetry off by default.](https://raw.githubusercontent.com/yashksaini-coder/glint/main/docs/img/architecture.png)
 
 | SDK signal | What Glint does with it |
 |---|---|
