@@ -90,6 +90,7 @@ app.whenReady().then(() => {
   win.webContents.on('will-navigate', (e) => e.preventDefault());
   win.loadFile(path.join(app.getAppPath(), 'src/renderer/index.html'));
   if (process.env.GLINT_DEVTOOLS === '1') win.webContents.openDevTools({ mode: 'detach' });
+  if (process.env.GLINT_FULLSCREEN === '1') win.setFullScreen(true); // demo recordings: nothing else in frame
 });
 
 app.on('window-all-closed', () => app.quit());
