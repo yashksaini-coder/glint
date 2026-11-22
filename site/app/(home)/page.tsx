@@ -3,6 +3,7 @@ import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { TopCells } from '@/components/docs/topbar';
 import { StackScene } from '@/components/home/stack-scene';
 import { StartTabs } from '@/components/home/start-tabs';
+import { DemoVideo } from '@/components/demo-video';
 import { GlintMark } from '@/components/logo';
 import { links } from '@/lib/shared';
 
@@ -68,6 +69,7 @@ export default function Landing() {
             you <strong className="font-medium text-fd-foreground">raise your eyebrows</strong> to pick what is lit and{' '}
             <strong className="font-medium text-fd-foreground">breathe out slowly</strong> to say it aloud. All it needs is a webcam.
           </p>
+          <div className="mt-7"><DemoVideo /></div>
           <div className="mt-7"><StartTabs /></div>
 
           <div className="mt-10">

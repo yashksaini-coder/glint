@@ -7,15 +7,20 @@
 <p align="center"><b>Type and speak with your eyebrows and your breath.</b></p>
 
 <p align="center">
+  <a href="#watch-the-demo">Demo video</a> ·
   <a href="https://github.com/yashksaini-coder/glint/releases/latest">Download</a> ·
   <a href="#how-you-use-it">How it works</a> ·
   <a href="#privacy-and-consent">Privacy</a> ·
   <a href="#run">Run from source</a>
 </p>
 
-A webcam switch-access keyboard for people who can't reliably use their hands or voice, built on the [Presage SmartSpectra](https://smartspectra.presagetech.com/docs/nodejs) Node SDK. No special hardware, no cloud service, no account.
+A webcam switch-access keyboard for people who can't reliably use their hands or voice, built on the [Presage SmartSpectra](https://smartspectra.presagetech.com/docs/nodejs) Node SDK. No special hardware, no Glint account, and video never leaves your computer.
 
-![Glint board: "hello" typed, highlight scanning the letters row, live eyebrow and breathing signals below](docs/img/board.png)
+## Watch the demo
+
+[![Glint demo: "I need water" selected with a raised eyebrow and spoken aloud, live on a real webcam. Click to play the 88-second video.](site/public/media/glint-demo-poster.jpg)](https://yashksaini-coder.github.io/glint/media/glint-demo.mp4)
+
+**[▶ Play the 88-second demo](https://yashksaini-coder.github.io/glint/media/glint-demo.mp4)**: live on a real webcam, eyebrow raises select phrases ("I need water", "I need help", "Thank you") and Glint speaks them aloud, then letters are typed one raise at a time (shown at 2× speed). Breath-to-speak is shown as a diagram: it has been tested on a recorded session, and did not fire in this live take. The music is an original chiptune generated in code.
 
 ## How you use it
 

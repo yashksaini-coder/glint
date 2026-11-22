@@ -5,6 +5,7 @@ import type { MDXComponents } from 'mdx/types';
 import * as ConceptFigures from './diagrams/concepts';
 import * as GuideFigures from './diagrams/guides';
 import * as ChartFigures from './diagrams/charts';
+import { DemoVideo } from './demo-video';
 
 export function getMDXComponents(components?: MDXComponents) {
   return {
@@ -16,6 +17,7 @@ export function getMDXComponents(components?: MDXComponents) {
     ...ConceptFigures,
     ...GuideFigures,
     ...ChartFigures,
+    DemoVideo,
     ...components,
   } satisfies MDXComponents;
 }
