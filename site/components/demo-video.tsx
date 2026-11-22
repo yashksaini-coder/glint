@@ -15,7 +15,8 @@ export function DemoVideo({ caption = true }: { caption?: boolean }) {
       {caption && (
         <figcaption>
           Live on a real webcam: eyebrow raises pick “I need water”, “I need help” and “Thank you”, and Glint says them aloud.
-          Typing is shown at 2× speed. Breath-to-speak is shown as a diagram, because it was tested on a recorded session.
+          Typing is shown at 2× speed. Breath-to-speak is shown as a diagram, because it was tested on a recorded session.{' '}
+          <a href="https://youtu.be/nlU4XPKDkNo">Watch on YouTube</a>.
         </figcaption>
       )}
     </figure>

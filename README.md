@@ -18,9 +18,9 @@ A webcam switch-access keyboard for people who can't reliably use their hands or
 
 ## Watch the demo
 
-[![Glint demo: "I need water" selected with a raised eyebrow and spoken aloud, live on a real webcam. Click to play the 88-second video.](site/public/media/glint-demo-poster.jpg)](https://yashksaini-coder.github.io/glint/media/glint-demo.mp4)
+[![Glint demo: "I need water" selected with a raised eyebrow and spoken aloud, live on a real webcam. Click to play the 88-second video.](site/public/media/glint-demo-poster.jpg)](https://youtu.be/nlU4XPKDkNo)
 
-**[▶ Play the 88-second demo](https://yashksaini-coder.github.io/glint/media/glint-demo.mp4)**: live on a real webcam, eyebrow raises select phrases ("I need water", "I need help", "Thank you") and Glint speaks them aloud, then letters are typed one raise at a time (shown at 2× speed). Breath-to-speak is shown as a diagram: it has been tested on a recorded session, and did not fire in this live take. The music is an original chiptune generated in code.
+**[▶ Watch on YouTube](https://youtu.be/nlU4XPKDkNo)** · [play the file directly](https://yashksaini-coder.github.io/glint/media/glint-demo.mp4): live on a real webcam, eyebrow raises select phrases ("I need water", "I need help", "Thank you") and Glint speaks them aloud, then letters are typed one raise at a time (shown at 2× speed). Breath-to-speak is shown as a diagram: it has been tested on a recorded session, and did not fire in this live take. The music is an original chiptune generated in code.
 
 ## How you use it
 
