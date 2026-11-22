@@ -73,6 +73,18 @@ app.whenReady().then(() => {
     webPreferences: { preload: path.join(app.getAppPath(), 'dist/preload.cjs'), contextIsolation: true, sandbox: true },
   });
   bindSmartSpectraIpc(win);
+  // Closing mid-session: the SDK's native thread keeps delivering callbacks, and one landing while
+  // Node tears down aborts the whole app (napi fatal error in koffi). So hold the close, let the
+  // renderer stop the session (its stop() resolves once the SDK reports idle), then close.
+  let closeReady = false;
+  win.on('close', (e) => {
+    if (closeReady) return;
+    e.preventDefault();
+    const finish = () => { if (closeReady) return; closeReady = true; if (!win.isDestroyed()) win.close(); };
+    ipcMain.once('glint:close-ready', finish);
+    setTimeout(finish, 3000); // never trap the user: close anyway if the renderer does not answer
+    win.webContents.send('glint:closing');
+  });
   win.webContents.on('console-message', (e) => { if (e.message.startsWith('[glint]')) console.log(e.message); });
   win.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
   win.webContents.on('will-navigate', (e) => e.preventDefault());
@@ -81,3 +93,15 @@ app.whenReady().then(() => {
 });
 
 app.on('window-all-closed', () => app.quit());
+
+// The SDK's IPC binding retires its session on window close, but the native teardown finishes later
+// on a koffi worker thread, and the binding keeps that promise private. Quitting before it lands
+// aborts Node (napi fatal error in koffi). Hold every quit path briefly so the threads can join.
+// ponytail: fixed grace; replace with the SDK's teardown promise if the binding ever exposes it.
+const QUIT_GRACE_MS = 2000;
+let quitGraceDone = false;
+app.on('will-quit', (e) => {
+  if (quitGraceDone) return;
+  e.preventDefault();
+  setTimeout(() => { quitGraceDone = true; app.quit(); }, QUIT_GRACE_MS);
+});

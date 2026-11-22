@@ -10,6 +10,9 @@ contextBridge.exposeInMainWorld('glint', {
   replay: (): Promise<string> => ipcRenderer.invoke('glint:replay'),
   speak: (text: string): Promise<boolean> => ipcRenderer.invoke('glint:speak', text),
   send: (text: string) => ipcRenderer.invoke('glint:send', text),
+  onClosing: (stopSession: () => Promise<void>) => {
+    ipcRenderer.on('glint:closing', () => { stopSession().finally(() => ipcRenderer.send('glint:close-ready')); });
+  },
   settings: {
     get: () => ipcRenderer.invoke('glint:settings:get'),
     set: (s: unknown) => ipcRenderer.invoke('glint:settings:set', s),

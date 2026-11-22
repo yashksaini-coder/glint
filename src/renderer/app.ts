@@ -283,3 +283,4 @@ addEventListener('keydown', (e) => {
   else if (e.key === 'Enter') { e.preventDefault(); void commit(); }
 });
 addEventListener('beforeunload', () => { void source?.stop(); });
+window.glint.onClosing(stop); // main waits for this before closing the window (see main/index.ts)
